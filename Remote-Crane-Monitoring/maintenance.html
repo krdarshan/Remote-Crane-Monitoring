@@ -1,0 +1,788 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crane Monitoring - Maintenance Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="maintenance.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="cranes.html"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li class="active"><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li><a href="reports.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search maintenance tasks...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">5</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="maintenance-content">
+        <div class="page-header">
+          <h1><i class="fas fa-tools"></i> Maintenance Management</h1>
+          <div class="page-actions">
+            <button class="action-btn" id="schedule-maintenance-btn">
+              <i class="fas fa-calendar-plus"></i> Schedule New
+            </button>
+            <button class="action-btn" id="assign-technician-btn">
+              <i class="fas fa-user-hard-hat"></i> Assign Technician
+            </button>
+            <button class="action-btn" id="work-orders-btn">
+              <i class="fas fa-clipboard-list"></i> Work Orders
+            </button>
+            <button class="action-btn" id="import-export-btn">
+              <i class="fas fa-file-import"></i> Import/Export
+            </button>
+            <button class="action-btn" id="generate-report-btn">
+              <i class="fas fa-file-pdf"></i> Generate Report
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-overview">
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #4CAF50;">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Completed Tasks</h3>
+              <p class="stat-number" id="completed-count">24</p>
+              <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 3 since last week</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #FF9800;">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Upcoming Tasks</h3>
+              <p class="stat-number" id="upcoming-count">12</p>
+              <span class="stat-trend neutral"><i class="fas fa-minus"></i> No change</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #F44336;">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Overdue Tasks</h3>
+              <p class="stat-number" id="overdue-count">3</p>
+              <span class="stat-trend negative"><i class="fas fa-arrow-up"></i> 1 since last week</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #2196F3;">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Compliance Rate</h3>
+              <p class="stat-number" id="compliance-rate">92%</p>
+              <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 2% increase</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-group">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter">
+              <option value="all">All Status</option>
+              <option value="completed">Completed</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="overdue">Overdue</option>
+              <option value="in-progress">In Progress</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="crane-filter">Crane:</label>
+            <select id="crane-filter">
+              <option value="all">All Cranes</option>
+              <option value="c-001">C-001</option>
+              <option value="c-002">C-002</option>
+              <option value="c-003">C-003</option>
+              <option value="c-004">C-004</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="technician-filter">Technician:</label>
+            <select id="technician-filter">
+              <option value="all">All Technicians</option>
+              <option value="john-doe">John Doe</option>
+              <option value="jane-smith">Jane Smith</option>
+              <option value="mike-jones">Mike Jones</option>
+              <option value="sarah-lee">Sarah Lee</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="type-filter">Type:</label>
+            <select id="type-filter">
+              <option value="all">All Types</option>
+              <option value="routine">Routine</option>
+              <option value="repair">Repair</option>
+              <option value="inspection">Inspection</option>
+              <option value="emergency">Emergency</option>
+            </select>
+          </div>
+          <div class="filter-group date-range">
+            <label>Date Range:</label>
+            <div class="date-inputs">
+              <input type="date" id="from-date">
+              <span>to</span>
+              <input type="date" id="to-date">
+            </div>
+          </div>
+          <button class="reset-filter-btn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+
+        <div class="maintenance-table-container">
+          <table class="maintenance-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-tasks"></th>
+                <th>ID <i class="fas fa-sort"></i></th>
+                <th>Crane <i class="fas fa-sort"></i></th>
+                <th>Task <i class="fas fa-sort"></i></th>
+                <th>Type <i class="fas fa-sort"></i></th>
+                <th>Assigned To <i class="fas fa-sort"></i></th>
+                <th>Due Date <i class="fas fa-sort"></i></th>
+                <th>Status <i class="fas fa-sort"></i></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="status-scheduled">
+                <td><input type="checkbox" class="task-select"></td>
+                <td>M-1025</td>
+                <td>C-001</td>
+                <td>
+                  <div class="task-info">
+                    <span class="task-name">Quarterly Hydraulic Inspection</span>
+                    <span class="task-details">Check hydraulic system for leaks and pressure</span>
+                  </div>
+                </td>
+                <td><span class="task-type">Inspection</span></td>
+                <td>
+                  <div class="technician-info">
+                    <span class="technician-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="technician-name">John Doe</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="due-date">
+                    <span class="date">Aug 25, 2023</span>
+                    <span class="time-left">5 days left</span>
+                  </div>
+                </td>
+                <td><span class="status-badge scheduled">Scheduled</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Task"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn complete-btn" title="Mark as Complete"><i class="fas fa-check"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Task"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-in-progress">
+                <td><input type="checkbox" class="task-select"></td>
+                <td>M-1024</td>
+                <td>C-002</td>
+                <td>
+                  <div class="task-info">
+                    <span class="task-name">Replace Worn Cables</span>
+                    <span class="task-details">Replace main hoist cables showing signs of wear</span>
+                  </div>
+                </td>
+                <td><span class="task-type">Repair</span></td>
+                <td>
+                  <div class="technician-info">
+                    <span class="technician-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="technician-name">Mike Jones</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="due-date">
+                    <span class="date">Aug 22, 2023</span>
+                    <span class="time-left">2 days left</span>
+                  </div>
+                </td>
+                <td><span class="status-badge in-progress">In Progress</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Task"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn complete-btn" title="Mark as Complete"><i class="fas fa-check"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Task"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-overdue">
+                <td><input type="checkbox" class="task-select"></td>
+                <td>M-1023</td>
+                <td>C-003</td>
+                <td>
+                  <div class="task-info">
+                    <span class="task-name">Motor Bearing Replacement</span>
+                    <span class="task-details">Replace main motor bearings showing excessive vibration</span>
+                  </div>
+                </td>
+                <td><span class="task-type">Repair</span></td>
+                <td>
+                  <div class="technician-info">
+                    <span class="technician-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="technician-name">Jane Smith</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="due-date">
+                    <span class="date">Aug 15, 2023</span>
+                    <span class="time-left overdue">5 days overdue</span>
+                  </div>
+                </td>
+                <td><span class="status-badge overdue">Overdue</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Task"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn complete-btn" title="Mark as Complete"><i class="fas fa-check"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Task"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-completed">
+                <td><input type="checkbox" class="task-select"></td>
+                <td>M-1022</td>
+                <td>C-001</td>
+                <td>
+                  <div class="task-info">
+                    <span class="task-name">Routine Oil Change</span>
+                    <span class="task-details">Change hydraulic oil and replace filters</span>
+                  </div>
+                </td>
+                <td><span class="task-type">Routine</span></td>
+                <td>
+                  <div class="technician-info">
+                    <span class="technician-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="technician-name">Sarah Lee</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="due-date">
+                    <span class="date">Aug 10, 2023</span>
+                    <span class="time-completed">Completed Aug 9</span>
+                  </div>
+                </td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Task"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-completed">
+                <td><input type="checkbox" class="task-select"></td>
+                <td>M-1021</td>
+                <td>C-004</td>
+                <td>
+                  <div class="task-info">
+                    <span class="task-name">Safety Inspection</span>
+                    <span class="task-details">Complete monthly safety compliance inspection</span>
+                  </div>
+                </td>
+                <td><span class="task-type">Inspection</span></td>
+                <td>
+                  <div class="technician-info">
+                    <span class="technician-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="technician-name">John Doe</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="due-date">
+                    <span class="date">Aug 5, 2023</span>
+                    <span class="time-completed">Completed Aug 4</span>
+                  </div>
+                </td>
+                <td><span class="status-badge completed">Completed</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Task"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <span class="pagination-ellipsis">...</span>
+          <button class="pagination-btn">12</button>
+          <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Predictive Maintenance Section -->
+      <div class="maintenance-content">
+        <div class="section-header">
+          <h2><i class="fas fa-brain"></i> AI Predictive Maintenance</h2>
+          <div class="section-controls">
+            <select class="time-range-selector">
+              <option value="30">Last 30 days</option>
+              <option value="60">Last 60 days</option>
+              <option value="90" selected>Last 90 days</option>
+              <option value="180">Last 180 days</option>
+            </select>
+            <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+          </div>
+        </div>
+
+        <div class="predictive-grid">
+          <div class="predictive-chart">
+            <canvas id="failurePredictionChart"></canvas>
+          </div>
+          <div class="prediction-insights">
+            <h3>AI Insights</h3>
+            <div class="insight-item high">
+              <div class="insight-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="insight-content">
+                <h4>High Risk: Hydraulic System</h4>
+                <p>Crane C-003 showing irregular pressure patterns. 85% probability of failure within 14 days.</p>
+                <button class="action-link">Schedule Maintenance</button>
+              </div>
+            </div>
+            <div class="insight-item medium">
+              <div class="insight-icon">
+                <i class="fas fa-exclamation-circle"></i>
+              </div>
+              <div class="insight-content">
+                <h4>Medium Risk: Motor Bearings</h4>
+                <p>Crane C-001 showing increased vibration patterns. 62% probability of issues within 30 days.</p>
+                <button class="action-link">Schedule Inspection</button>
+              </div>
+            </div>
+            <div class="insight-item low">
+              <div class="insight-icon">
+                <i class="fas fa-info-circle"></i>
+              </div>
+              <div class="insight-content">
+                <h4>Efficiency Alert</h4>
+                <p>Crane C-002 operating at 18% below optimal efficiency. Recommend calibration.</p>
+                <button class="action-link">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="predicted-failures-list">
+          <div class="list-header">
+            <h3>Predicted Component Failures</h3>
+            <div class="list-controls">
+              <select id="failure-probability-filter">
+                <option value="all">All Probabilities</option>
+                <option value="high">High Risk (>70%)</option>
+                <option value="medium">Medium Risk (30-70%)</option>
+                <option value="low">Low Risk (<30%)</option>
+              </select>
+            </div>
+          </div>
+          <table class="prediction-table">
+            <thead>
+              <tr>
+                <th>Crane</th>
+                <th>Component</th>
+                <th>Current Status</th>
+                <th>Failure Probability</th>
+                <th>Estimated Time</th>
+                <th>Recommended Action</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="high-risk">
+                <td>C-003</td>
+                <td>Hydraulic System</td>
+                <td><span class="status-operating">Operating</span></td>
+                <td>
+                  <div class="probability-bar">
+                    <div class="probability-value" style="width: 85%;">85%</div>
+                  </div>
+                </td>
+                <td>14 days</td>
+                <td>Schedule replacement</td>
+                <td>
+                  <button class="table-action-btn schedule-btn" title="Schedule Maintenance"><i class="fas fa-calendar-plus"></i></button>
+                  <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                </td>
+              </tr>
+              <tr class="medium-risk">
+                <td>C-001</td>
+                <td>Main Motor Bearings</td>
+                <td><span class="status-operating">Operating</span></td>
+                <td>
+                  <div class="probability-bar">
+                    <div class="probability-value" style="width: 62%;">62%</div>
+                  </div>
+                </td>
+                <td>30 days</td>
+                <td>Schedule inspection</td>
+                <td>
+                  <button class="table-action-btn schedule-btn" title="Schedule Maintenance"><i class="fas fa-calendar-plus"></i></button>
+                  <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                </td>
+              </tr>
+              <tr class="medium-risk">
+                <td>C-002</td>
+                <td>Hoist Cable</td>
+                <td><span class="status-operating">Operating</span></td>
+                <td>
+                  <div class="probability-bar">
+                    <div class="probability-value" style="width: 48%;">48%</div>
+                  </div>
+                </td>
+                <td>45 days</td>
+                <td>Monitor wear</td>
+                <td>
+                  <button class="table-action-btn schedule-btn" title="Schedule Maintenance"><i class="fas fa-calendar-plus"></i></button>
+                  <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                </td>
+              </tr>
+              <tr class="low-risk">
+                <td>C-004</td>
+                <td>Control Panel</td>
+                <td><span class="status-operating">Operating</span></td>
+                <td>
+                  <div class="probability-bar">
+                    <div class="probability-value" style="width: 23%;">23%</div>
+                  </div>
+                </td>
+                <td>90 days</td>
+                <td>Routine inspection</td>
+                <td>
+                  <button class="table-action-btn schedule-btn" title="Schedule Maintenance"><i class="fas fa-calendar-plus"></i></button>
+                  <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maintenance Schedule Modal -->
+  <div class="modal" id="schedule-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Schedule Maintenance Task</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="task-name">Task Name</label>
+          <input type="text" id="task-name" placeholder="Enter task name">
+        </div>
+        <div class="form-group">
+          <label for="task-crane">Select Crane</label>
+          <select id="task-crane">
+            <option value="">Select crane</option>
+            <option value="C-001">Crane C-001</option>
+            <option value="C-002">Crane C-002</option>
+            <option value="C-003">Crane C-003</option>
+            <option value="C-004">Crane C-004</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="task-type">Maintenance Type</label>
+          <select id="task-type">
+            <option value="routine">Routine Maintenance</option>
+            <option value="repair">Repair</option>
+            <option value="inspection">Inspection</option>
+            <option value="emergency">Emergency Repair</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="task-description">Description</label>
+          <textarea id="task-description" placeholder="Enter detailed description of the task"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date">
+          </div>
+          <div class="form-group half">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="task-technician">Assign Technician</label>
+          <select id="task-technician">
+            <option value="">Select technician</option>
+            <option value="john-doe">John Doe</option>
+            <option value="jane-smith">Jane Smith</option>
+            <option value="mike-jones">Mike Jones</option>
+            <option value="sarah-lee">Sarah Lee</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estimated Duration</label>
+          <div class="duration-inputs">
+            <input type="number" id="task-hours" min="0" value="2"> hours
+            <input type="number" id="task-minutes" min="0" max="59" value="30"> minutes
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Parts Required</label>
+          <div class="parts-list">
+            <div class="part-item">
+              <input type="text" placeholder="Part name" class="part-name">
+              <input type="number" placeholder="Quantity" class="part-quantity" min="1" value="1">
+              <button class="remove-part-btn"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <button id="add-part-btn" class="secondary-btn"><i class="fas fa-plus"></i> Add Part</button>
+        </div>
+        <div class="form-group">
+          <label>Compliance Standards</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" value="iso9001"> ISO 9001
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="osha"> OSHA Standards
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" value="manufacturer"> Manufacturer Guidelines
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="save-task" class="primary-btn">Save Task</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Work Order Modal -->
+  <div class="modal" id="work-order-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Work Order: WO-235</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="work-order-details">
+          <div class="wo-header">
+            <div class="wo-info">
+              <div class="wo-item">
+                <span class="wo-label">Work Order ID:</span>
+                <span class="wo-value">WO-235</span>
+              </div>
+              <div class="wo-item">
+                <span class="wo-label">Related Task:</span>
+                <span class="wo-value">M-1023</span>
+              </div>
+              <div class="wo-item">
+                <span class="wo-label">Crane:</span>
+                <span class="wo-value">C-003</span>
+              </div>
+              <div class="wo-item">
+                <span class="wo-label">Status:</span>
+                <span class="wo-value status-badge overdue">Overdue</span>
+              </div>
+            </div>
+            <div class="wo-dates">
+              <div class="wo-item">
+                <span class="wo-label">Created:</span>
+                <span class="wo-value">Aug 10, 2023</span>
+              </div>
+              <div class="wo-item">
+                <span class="wo-label">Due:</span>
+                <span class="wo-value">Aug 15, 2023</span>
+              </div>
+              <div class="wo-item">
+                <span class="wo-label">Assigned To:</span>
+                <span class="wo-value">Jane Smith</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="wo-task-details">
+            <h3>Task Details</h3>
+            <div class="task-description">
+              <p class="task-title">Motor Bearing Replacement</p>
+              <p>Replace main motor bearings showing excessive vibration. Readings indicate wear beyond acceptable limits. Use new sealed bearings (part #MBR-75A) and ensure proper alignment during installation.</p>
+            </div>
+          </div>
+          
+          <div class="wo-parts">
+            <h3>Parts Required</h3>
+            <table class="parts-table">
+              <thead>
+                <tr>
+                  <th>Part Number</th>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MBR-75A</td>
+                  <td>Sealed Motor Bearing</td>
+                  <td>2</td>
+                  <td><span class="part-status available">Available</span></td>
+                </tr>
+                <tr>
+                  <td>SL-102</td>
+                  <td>Bearing Sealant</td>
+                  <td>1</td>
+                  <td><span class="part-status available">Available</span></td>
+                </tr>
+                <tr>
+                  <td>GSK-45</td>
+                  <td>Motor Gasket</td>
+                  <td>1</td>
+                  <td><span class="part-status ordered">Ordered</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="wo-instructions">
+            <h3>Work Instructions</h3>
+            <ol class="instruction-steps">
+              <li>Lock out/tag out the crane power supply</li>
+              <li>Remove motor access panel</li>
+              <li>Disconnect wiring harness (document connection points)</li>
+              <li>Remove motor mounting bolts and extract motor</li>
+              <li>Open motor housing and remove old bearings</li>
+              <li>Clean bearing housings thoroughly</li>
+              <li>Install new bearings with proper alignment tools</li>
+              <li>Apply sealant and replace gaskets</li>
+              <li>Reassemble motor and mount to crane</li>
+              <li>Reconnect wiring harness</li>
+              <li>Test motor operation before returning to service</li>
+              <li>Document all work performed and parts used</li>
+            </ol>
+          </div>
+          
+          <div class="wo-safety">
+            <h3>Safety Requirements</h3>
+            <ul class="safety-checklist">
+              <li>Personal Protective Equipment (hard hat, safety glasses, gloves)</li>
+              <li>Fall protection when working at heights</li>
+              <li>Proper lifting techniques for motor handling</li>
+              <li>Lockout/tagout procedures must be followed</li>
+              <li>Work area must be cordoned off with safety barriers</li>
+            </ul>
+          </div>
+          
+          <div class="wo-completion">
+            <h3>Completion Details</h3>
+            <div class="form-group">
+              <label for="work-completed">Work Completed</label>
+              <textarea id="work-completed" placeholder="Describe the work completed..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="completion-issues">Issues Encountered</label>
+              <textarea id="completion-issues" placeholder="Describe any issues or challenges..."></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <label for="time-spent">Time Spent</label>
+                <div class="time-inputs">
+                  <input type="number" id="hours-spent" min="0" value="0"> hours
+                  <input type="number" id="minutes-spent" min="0" max="59" value="0"> minutes
+                </div>
+              </div>
+              <div class="form-group half">
+                <label for="completion-date">Completion Date</label>
+                <input type="date" id="completion-date">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Additional Parts Used</label>
+              <div class="parts-list">
+                <div class="part-item">
+                  <input type="text" placeholder="Part number" class="part-number">
+                  <input type="text" placeholder="Description" class="part-desc">
+                  <input type="number" placeholder="Quantity" class="part-quantity" min="1" value="1">
+                  <button class="remove-part-btn"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <button id="add-used-part-btn" class="secondary-btn"><i class="fas fa-plus"></i> Add Part</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="complete-work-order" class="primary-btn">Complete Work Order</button>
+        <button id="save-progress" class="secondary-btn">Save Progress</button>
+        <button class="print-btn"><i class="fas fa-print"></i> Print</button>
+        <button class="cancel-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="maintenance.js"></script>
+</body>
+</html>

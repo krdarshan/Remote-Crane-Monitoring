@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crane Monitoring - Alerts Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="alerts.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="cranes.html"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li><a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li class="active"><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search alerts...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn active">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">12</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="alerts-content">
+        <div class="page-header">
+          <h1><i class="fas fa-bell"></i> Alerts Management</h1>
+          <div class="page-actions">
+            <button class="action-btn" id="acknowledge-all-btn">
+              <i class="fas fa-check-double"></i> Acknowledge All
+            </button>
+            <button class="action-btn" id="export-alerts-btn">
+              <i class="fas fa-file-export"></i> Export Alerts
+            </button>
+            <button class="action-btn" id="notification-settings-btn">
+              <i class="fas fa-cog"></i> Notification Settings
+            </button>
+          </div>
+        </div>
+
+        <div class="alerts-overview">
+          <div class="alert-card critical">
+            <div class="alert-icon">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="alert-count">3</div>
+            <div class="alert-label">Critical</div>
+            <div class="alert-trend negative">
+              <i class="fas fa-arrow-up"></i> 1
+            </div>
+          </div>
+          
+          <div class="alert-card warning">
+            <div class="alert-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-count">7</div>
+            <div class="alert-label">Warning</div>
+            <div class="alert-trend negative">
+              <i class="fas fa-arrow-up"></i> 2
+            </div>
+          </div>
+          
+          <div class="alert-card maintenance">
+            <div class="alert-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <div class="alert-count">4</div>
+            <div class="alert-label">Maintenance</div>
+            <div class="alert-trend neutral">
+              <i class="fas fa-minus"></i> 0
+            </div>
+          </div>
+          
+          <div class="alert-card info">
+            <div class="alert-icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="alert-count">8</div>
+            <div class="alert-label">Info</div>
+            <div class="alert-trend positive">
+              <i class="fas fa-arrow-down"></i> 3
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-group">
+            <label for="alert-type-filter">Alert Type:</label>
+            <select id="alert-type-filter">
+              <option value="all">All Types</option>
+              <option value="temperature">Temperature</option>
+              <option value="vibration">Vibration</option>
+              <option value="load">Load</option>
+              <option value="pressure">Pressure</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="system">System</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="severity-filter">Severity:</label>
+            <select id="severity-filter">
+              <option value="all">All Severities</option>
+              <option value="critical">Critical</option>
+              <option value="warning">Warning</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="info">Information</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter">
+              <option value="all">All Status</option>
+              <option value="new">New</option>
+              <option value="acknowledged">Acknowledged</option>
+              <option value="in-progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="crane-filter">Crane:</label>
+            <select id="crane-filter">
+              <option value="all">All Cranes</option>
+              <option value="c-001">C-001</option>
+              <option value="c-002">C-002</option>
+              <option value="c-003">C-003</option>
+              <option value="c-004">C-004</option>
+            </select>
+          </div>
+          <div class="filter-group date-range">
+            <label>Date Range:</label>
+            <div class="date-inputs">
+              <input type="date" id="alert-from-date">
+              <span>to</span>
+              <input type="date" id="alert-to-date">
+            </div>
+          </div>
+          <button class="reset-filter-btn">
+            <i class="fas fa-undo"></i> Reset
+          </button>
+        </div>
+
+        <div class="alerts-table-container">
+          <table class="alerts-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-alerts"></th>
+                <th>ID <i class="fas fa-sort"></i></th>
+                <th>Time <i class="fas fa-sort"></i></th>
+                <th>Crane <i class="fas fa-sort"></i></th>
+                <th>Type <i class="fas fa-sort"></i></th>
+                <th>Severity <i class="fas fa-sort"></i></th>
+                <th>Message</th>
+                <th>Status <i class="fas fa-sort"></i></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alert-row critical new">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1027</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">10:45 AM</span>
+                    <span class="date">Today</span>
+                  </div>
+                </td>
+                <td>C-004</td>
+                <td>Load</td>
+                <td><span class="severity-badge critical">Critical</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">Load capacity exceeded 93% threshold</span>
+                    <span class="alert-details">Current: 93%, Threshold: 90%</span>
+                  </div>
+                </td>
+                <td><span class="status-badge new">New</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn acknowledge-btn" title="Acknowledge"><i class="fas fa-check"></i></button>
+                    <button class="table-action-btn assign-btn" title="Assign"><i class="fas fa-user-plus"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="alert-row warning acknowledged">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1026</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">09:23 AM</span>
+                    <span class="date">Today</span>
+                  </div>
+                </td>
+                <td>C-003</td>
+                <td>Temperature</td>
+                <td><span class="severity-badge warning">Warning</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">Motor temperature approaching high threshold</span>
+                    <span class="alert-details">Current: 82°C, Threshold: 85°C</span>
+                  </div>
+                </td>
+                <td><span class="status-badge acknowledged">Acknowledged</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn resolve-btn" title="Mark as Resolved"><i class="fas fa-check-double"></i></button>
+                    <button class="table-action-btn escalate-btn" title="Escalate"><i class="fas fa-arrow-up"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="alert-row warning in-progress">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1025</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">08:15 AM</span>
+                    <span class="date">Today</span>
+                  </div>
+                </td>
+                <td>C-002</td>
+                <td>Vibration</td>
+                <td><span class="severity-badge warning">Warning</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">Abnormal vibration detected in main bearing</span>
+                    <span class="alert-details">Current: 24mm/s², Threshold: 20mm/s²</span>
+                  </div>
+                </td>
+                <td><span class="status-badge in-progress">In Progress</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn resolve-btn" title="Mark as Resolved"><i class="fas fa-check-double"></i></button>
+                    <button class="table-action-btn note-btn" title="Add Note"><i class="fas fa-sticky-note"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="alert-row maintenance acknowledged">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1024</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">02:45 PM</span>
+                    <span class="date">Yesterday</span>
+                  </div>
+                </td>
+                <td>C-003</td>
+                <td>Maintenance</td>
+                <td><span class="severity-badge maintenance">Maintenance</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">Scheduled maintenance due in 3 days</span>
+                    <span class="alert-details">Last: Jul 20, Next: Aug 20</span>
+                  </div>
+                </td>
+                <td><span class="status-badge acknowledged">Acknowledged</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn schedule-btn" title="Schedule Maintenance"><i class="fas fa-calendar-alt"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="alert-row critical resolved">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1023</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">11:10 AM</span>
+                    <span class="date">Yesterday</span>
+                  </div>
+                </td>
+                <td>C-001</td>
+                <td>Pressure</td>
+                <td><span class="severity-badge critical">Critical</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">Hydraulic pressure exceeded critical threshold</span>
+                    <span class="alert-details">Current: 220 bar, Threshold: 200 bar</span>
+                  </div>
+                </td>
+                <td><span class="status-badge resolved">Resolved</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn reopen-btn" title="Reopen"><i class="fas fa-redo-alt"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="alert-row info acknowledged">
+                <td><input type="checkbox" class="alert-select"></td>
+                <td>AL-1022</td>
+                <td>
+                  <div class="alert-time">
+                    <span class="time">09:30 AM</span>
+                    <span class="date">Aug 10</span>
+                  </div>
+                </td>
+                <td>All</td>
+                <td>System</td>
+                <td><span class="severity-badge info">Info</span></td>
+                <td>
+                  <div class="alert-message">
+                    <span class="message-text">New firmware update available for crane control systems</span>
+                    <span class="alert-details">Version: 4.2.1, Released: Aug 8</span>
+                  </div>
+                </td>
+                <td><span class="status-badge acknowledged">Acknowledged</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn schedule-btn" title="Schedule Update"><i class="fas fa-calendar-alt"></i></button>
+                    <button class="table-action-btn details-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <span class="pagination-ellipsis">...</span>
+          <button class="pagination-btn">15</button>
+          <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Details Modal -->
+  <div class="modal" id="alert-details-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Alert Details - AL-1027</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="alert-details-grid">
+          <div class="detail-card">
+            <h3>Alert Information</h3>
+            <div class="detail-item">
+              <span class="detail-label">Alert ID:</span>
+              <span class="detail-value">AL-1027</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Generated:</span>
+              <span class="detail-value">Aug 15, 2023 10:45 AM</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Type:</span>
+              <span class="detail-value">Load Alert</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Severity:</span>
+              <span class="detail-value severity-critical">Critical</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Status:</span>
+              <span class="detail-value status-new">New</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Auto-escalation:</span>
+              <span class="detail-value">In 45 minutes</span>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <h3>Crane Information</h3>
+            <div class="detail-item">
+              <span class="detail-label">Crane ID:</span>
+              <span class="detail-value">C-004</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Model:</span>
+              <span class="detail-value">CT-5000X</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Location:</span>
+              <span class="detail-value">Shipping Yard D</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Operator:</span>
+              <span class="detail-value">Mark S.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Current Status:</span>
+              <span class="detail-value status-operational">Operational</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">View Crane:</span>
+              <span class="detail-value"><a href="#" class="link">Crane Details</a></span>
+            </div>
+          </div>
+          
+          <div class="detail-card full-width">
+            <h3>Alert Details</h3>
+            <div class="alert-message-full">
+              <p class="message-title">Load capacity exceeded 93% threshold</p>
+              <p class="message-body">The crane is operating at 93% of its maximum rated load capacity, which exceeds the safety threshold of 90%. Immediate action is required to reduce the load or inspect the system.</p>
+              <div class="detail-item">
+                <span class="detail-label">Current Value:</span>
+                <span class="detail-value">93% (11,160 kg)</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Threshold:</span>
+                <span class="detail-value">90% (10,800 kg)</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Maximum Rated Load:</span>
+                <span class="detail-value">12,000 kg</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <h3>Alert History</h3>
+            <div class="alert-history">
+              <div class="history-item">
+                <div class="history-time">10:45 AM</div>
+                <div class="history-event">Alert generated</div>
+                <div class="history-source">System</div>
+              </div>
+              <div class="history-item">
+                <div class="history-time">10:46 AM</div>
+                <div class="history-event">SMS notification sent</div>
+                <div class="history-source">System</div>
+              </div>
+              <div class="history-item">
+                <div class="history-time">10:46 AM</div>
+                <div class="history-event">Email notification sent</div>
+                <div class="history-source">System</div>
+              </div>
+              <div class="history-item">
+                <div class="history-time">10:48 AM</div>
+                <div class="history-event">Mobile app notification sent</div>
+                <div class="history-source">System</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <h3>Recommended Actions</h3>
+            <div class="recommended-actions">
+              <div class="action-item">
+                <div class="action-icon"><i class="fas fa-weight-hanging"></i></div>
+                <div class="action-text">
+                  <p>Reduce the load immediately</p>
+                  <span class="action-priority high">High Priority</span>
+                </div>
+              </div>
+              <div class="action-item">
+                <div class="action-icon"><i class="fas fa-search"></i></div>
+                <div class="action-text">
+                  <p>Inspect load sensors for calibration issues</p>
+                  <span class="action-priority medium">Medium Priority</span>
+                </div>
+              </div>
+              <div class="action-item">
+                <div class="action-icon"><i class="fas fa-user-hard-hat"></i></div>
+                <div class="action-text">
+                  <p>Notify crane operator about maximum load limits</p>
+                  <span class="action-priority medium">Medium Priority</span>
+                </div>
+              </div>
+              <div class="action-item">
+                <div class="action-icon"><i class="fas fa-clipboard-check"></i></div>
+                <div class="action-text">
+                  <p>Schedule load capacity inspection</p>
+                  <span class="action-priority low">Low Priority</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="alert-data-chart">
+          <h3>Load Data Trend <span class="chart-time">Last 24 Hours</span></h3>
+          <div class="chart-container">
+            <canvas id="alertDataChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="response-section">
+          <h3>Response</h3>
+          <div class="response-form">
+            <div class="response-status-group">
+              <label>Update Status:</label>
+              <div class="status-options">
+                <label class="status-option">
+                  <input type="radio" name="alert-status" value="acknowledged" checked>
+                  <span class="status-label">Acknowledge</span>
+                </label>
+                <label class="status-option">
+                  <input type="radio" name="alert-status" value="in-progress">
+                  <span class="status-label">In Progress</span>
+                </label>
+                <label class="status-option">
+                  <input type="radio" name="alert-status" value="resolved">
+                  <span class="status-label">Resolved</span>
+                </label>
+                <label class="status-option">
+                  <input type="radio" name="alert-status" value="escalate">
+                  <span class="status-label">Escalate</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="response-assignment">
+              <label for="assign-to">Assign to:</label>
+              <select id="assign-to">
+                <option value="">Unassigned</option>
+                <option value="maintenance-team">Maintenance Team</option>
+                <option value="john-doe">John Doe (Maintenance)</option>
+                <option value="alice-smith">Alice Smith (Supervisor)</option>
+                <option value="robert-johnson">Robert Johnson (Engineer)</option>
+              </select>
+            </div>
+            
+            <div class="response-notes">
+              <label for="response-note">Notes:</label>
+              <textarea id="response-note" placeholder="Add your notes or response details here..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-btn"><i class="fas fa-save"></i> Save Response</button>
+        <button class="secondary-btn"><i class="fas fa-bell-slash"></i> Snooze Alert</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="alerts.js"></script>
+</body>
+</html>

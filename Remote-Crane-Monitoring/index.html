@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crane Monitoring Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <script>
+    // Check if user is logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+      if (!currentUser) {
+        // Redirect to login page if not authenticated
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Update UI based on user role
+      setTimeout(() => {
+        document.querySelector('.user-name').textContent = currentUser.username;
+        document.querySelector('.user-role').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+
+        // Role-based UI adjustments
+        if (currentUser.role !== 'admin') {
+          // Hide admin-only features
+          const settingsMenu = document.querySelector('nav ul li a[href="#settings"]').parentElement;
+          if (settingsMenu) {
+            settingsMenu.style.display = currentUser.role === 'supervisor' ? 'block' : 'none';
+          }
+        }
+      }, 100);
+    });
+  </script>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="#cranes"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li><a href="reports.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="#alerts"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li><a href="incidents.html"><i class="fas fa-exclamation-triangle"></i> Incidents</a></li>
+          <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <div class="dashboard-header">
+          <h1>Crane Monitoring Dashboard</h1>
+          <div class="dashboard-actions">
+            <div class="date-filter">
+              <select id="date-range-filter">
+                <option value="daily">Daily</option>
+                <option value="weekly" selected>Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="dashboard-controls">
+              <button id="refresh-data" title="Refresh Data"><i class="fas fa-sync"></i></button>
+              <button id="export-pdf" title="Export as PDF"><i class="fas fa-file-pdf"></i></button>
+              <button id="export-excel" title="Export as Excel"><i class="fas fa-file-excel"></i></button>
+              <button id="customize-dashboard" title="Customize Dashboard"><i class="fas fa-th-large"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-overview">
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #4CAF50;">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Operational Cranes</h3>
+              <p class="stat-number" id="operational-count">15</p>
+              <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 2 since yesterday</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #FF9800;">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Maintenance Required</h3>
+              <p class="stat-number" id="maintenance-count">3</p>
+              <span class="stat-trend negative"><i class="fas fa-arrow-up"></i> 1 since yesterday</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #F44336;">
+              <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Critical Issues</h3>
+              <p class="stat-number" id="critical-count">1</p>
+              <span class="stat-trend neutral"><i class="fas fa-minus"></i> No change</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #2196F3;">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-details">
+              <h3>Average Uptime</h3>
+              <p class="stat-number" id="uptime-percentage">98.5%</p>
+              <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 0.3% increase</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid" id="customizable-dashboard">
+          <div class="grid-item" id="crane-status">
+            <div class="widget-header">
+              <h2>Live Crane Status</h2>
+              <div class="widget-controls">
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-view-selector">
+                  <option value="all">All Cranes</option>
+                  <option value="critical">Critical Only</option>
+                  <option value="warning">Warning Only</option>
+                  <option value="operational">Operational Only</option>
+                </select>
+              </div>
+            </div>
+            <div class="crane-list">
+              <div class="crane-item operational">
+                <div class="crane-info">
+                  <h4>Crane #C-001</h4>
+                  <p>Construction Site A</p>
+                </div>
+                <div class="crane-metrics">
+                  <div class="metric">
+                    <span class="metric-name">Load</span>
+                    <span class="metric-value">45%</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-name">Temp</span>
+                    <span class="metric-value">72°C</span>
+                  </div>
+                </div>
+                <div class="status">
+                  <span class="status-indicator green-status"></span>
+                  Operational
+                </div>
+              </div>
+              <div class="crane-item operational">
+                <div class="crane-info">
+                  <h4>Crane #C-002</h4>
+                  <p>Port Facility B</p>
+                </div>
+                <div class="crane-metrics">
+                  <div class="metric">
+                    <span class="metric-name">Load</span>
+                    <span class="metric-value">38%</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-name">Temp</span>
+                    <span class="metric-value">65°C</span>
+                  </div>
+                </div>
+                <div class="status">
+                  <span class="status-indicator green-status"></span>
+                  Operational
+                </div>
+              </div>
+              <div class="crane-item warning">
+                <div class="crane-info">
+                  <h4>Crane #C-003</h4>
+                  <p>Manufacturing Plant C</p>
+                </div>
+                <div class="crane-metrics">
+                  <div class="metric">
+                    <span class="metric-name">Load</span>
+                    <span class="metric-value">52%</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-name">Temp</span>
+                    <span class="metric-value">82°C</span>
+                  </div>
+                </div>
+                <div class="status">
+                  <span class="status-indicator yellow-status"></span>
+                  Maintenance Soon
+                </div>
+              </div>
+              <div class="crane-item critical">
+                <div class="crane-info">
+                  <h4>Crane #C-004</h4>
+                  <p>Shipping Yard D</p>
+                </div>
+                <div class="crane-metrics">
+                  <div class="metric warning-metric">
+                    <span class="metric-name">Load</span>
+                    <span class="metric-value">93%</span>
+                  </div>
+                  <div class="metric critical-metric">
+                    <span class="metric-name">Temp</span>
+                    <span class="metric-value">105°C</span>
+                  </div>
+                </div>
+                <div class="status">
+                  <span class="status-indicator red-status"></span>
+                  Critical Issue
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-item" id="performance-chart">
+            <div class="widget-header">
+              <h2>Performance Metrics</h2>
+              <div class="widget-controls">
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-chart-selector">
+                  <option value="line">Line Chart</option>
+                  <option value="bar">Bar Chart</option>
+                  <option value="area">Area Chart</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="legend-color" style="background-color: #4CAF50;"></span>
+                  <span class="legend-text">Load Capacity</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color" style="background-color: #2196F3;"></span>
+                  <span class="legend-text">Energy Consumption</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color" style="background-color: #FF9800;"></span>
+                  <span class="legend-text">Maintenance Indicators</span>
+                </div>
+              </div>
+              <canvas id="performanceChart"></canvas>
+            </div>
+          </div>
+
+          <div class="grid-item" id="alerts-panel">
+            <div class="widget-header">
+              <h2>Real-Time Alerts</h2>
+              <div class="widget-controls">
+                <span class="alert-counter" id="new-alerts-count">3</span>
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-alert-selector">
+                  <option value="all">All Alerts</option>
+                  <option value="critical">Critical Only</option>
+                  <option value="warning">Warning Only</option>
+                  <option value="info">Info Only</option>
+                </select>
+              </div>
+            </div>
+            <div class="alerts-list">
+              <div class="alert-item critical">
+                <div class="alert-icon">
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="alert-info">
+                  <h4>Critical Load Detected</h4>
+                  <p>Crane #C-004 - Load exceeded 95% capacity</p>
+                  <span class="alert-time">10 minutes ago</span>
+                </div>
+                <div class="alert-actions">
+                  <button class="alert-action" title="Mark as Read"><i class="fas fa-check"></i></button>
+                  <button class="alert-action" title="Assign"><i class="fas fa-user-plus"></i></button>
+                </div>
+              </div>
+              <div class="alert-item warning">
+                <div class="alert-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-info">
+                  <h4>Maintenance Due</h4>
+                  <p>Crane #C-003 - Scheduled maintenance in 3 days</p>
+                  <span class="alert-time">2 hours ago</span>
+                </div>
+                <div class="alert-actions">
+                  <button class="alert-action" title="Mark as Read"><i class="fas fa-check"></i></button>
+                  <button class="alert-action" title="Assign"><i class="fas fa-user-plus"></i></button>
+                </div>
+              </div>
+              <div class="alert-item info">
+                <div class="alert-icon">
+                  <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="alert-info">
+                  <h4>System Update</h4>
+                  <p>New firmware available for all crane models</p>
+                  <span class="alert-time">Yesterday</span>
+                </div>
+                <div class="alert-actions">
+                  <button class="alert-action" title="Mark as Read"><i class="fas fa-check"></i></button>
+                  <button class="alert-action" title="Assign"><i class="fas fa-user-plus"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-item" id="maintenance-prediction">
+            <div class="widget-header">
+              <h2>Predictive Maintenance</h2>
+              <div class="widget-controls">
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-sort-selector">
+                  <option value="urgency">Sort by Urgency</option>
+                  <option value="crane">Sort by Crane</option>
+                  <option value="component">Sort by Component</option>
+                </select>
+              </div>
+            </div>
+            <div class="prediction-list">
+              <div class="prediction-item">
+                <div class="crane-info">
+                  <h4>Crane #C-003</h4>
+                  <p>Hydraulic System</p>
+                </div>
+                <div class="prediction-bar">
+                  <div class="progress" style="width: 68%;"></div>
+                </div>
+                <div class="prediction-detail">
+                  <span class="prediction-percentage">68%</span>
+                  <span class="prediction-time">~12 days until maintenance</span>
+                </div>
+              </div>
+              <div class="prediction-item">
+                <div class="crane-info">
+                  <h4>Crane #C-002</h4>
+                  <p>Cable Wear</p>
+                </div>
+                <div class="prediction-bar">
+                  <div class="progress" style="width: 42%;"></div>
+                </div>
+                <div class="prediction-detail">
+                  <span class="prediction-percentage">42%</span>
+                  <span class="prediction-time">~28 days until maintenance</span>
+                </div>
+              </div>
+              <div class="prediction-item">
+                <div class="crane-info">
+                  <h4>Crane #C-001</h4>
+                  <p>Motor Bearings</p>
+                </div>
+                <div class="prediction-bar">
+                  <div class="progress" style="width: 12%;"></div>
+                </div>
+                <div class="prediction-detail">
+                  <span class="prediction-percentage">12%</span>
+                  <span class="prediction-time">~60 days until maintenance</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-item" id="live-temperature">
+            <div class="widget-header">
+              <h2>Temperature Monitoring</h2>
+              <div class="widget-controls">
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-selector">
+                  <option value="line">Line Chart</option>
+                  <option value="gauge">Gauge View</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="temperatureChart"></canvas>
+            </div>
+          </div>
+
+          <div class="grid-item" id="vibration-analysis">
+            <div class="widget-header">
+              <h2>Vibration Analysis</h2>
+              <div class="widget-controls">
+                <button class="widget-control refresh-widget" title="Refresh"><i class="fas fa-sync"></i></button>
+                <button class="widget-control move-widget" title="Move"><i class="fas fa-arrows-alt"></i></button>
+                <select class="widget-crane-selector">
+                  <option value="all">All Cranes</option>
+                  <option value="c001">Crane #C-001</option>
+                  <option value="c002">Crane #C-002</option>
+                  <option value="c003">Crane #C-003</option>
+                  <option value="c004">Crane #C-004</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="vibrationChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Widget Customization Modal -->
+        <div id="customization-modal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Customize Dashboard</h2>
+              <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+              <h3>Available Widgets</h3>
+              <div class="available-widgets">
+                <div class="widget-option" data-widget="crane-status">
+                  <div class="widget-option-header">
+                    <h4>Crane Status</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Shows the current operational status of all cranes</p>
+                </div>
+                <div class="widget-option" data-widget="performance-chart">
+                  <div class="widget-option-header">
+                    <h4>Performance Metrics</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Displays performance trends over time</p>
+                </div>
+                <div class="widget-option" data-widget="alerts-panel">
+                  <div class="widget-option-header">
+                    <h4>Alerts Panel</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Shows recent alerts and notifications</p>
+                </div>
+                <div class="widget-option" data-widget="maintenance-prediction">
+                  <div class="widget-option-header">
+                    <h4>Predictive Maintenance</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Displays maintenance predictions and scheduling</p>
+                </div>
+                <div class="widget-option" data-widget="live-temperature">
+                  <div class="widget-option-header">
+                    <h4>Temperature Monitoring</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Shows real-time temperature readings</p>
+                </div>
+                <div class="widget-option" data-widget="vibration-analysis">
+                  <div class="widget-option-header">
+                    <h4>Vibration Analysis</h4>
+                    <input type="checkbox" checked class="widget-toggle">
+                  </div>
+                  <p>Displays vibration patterns and anomalies</p>
+                </div>
+              </div>
+
+              <h3>Layout Options</h3>
+              <div class="layout-options">
+                <button class="layout-option" data-layout="2x3">2 x 3 Grid</button>
+                <button class="layout-option" data-layout="2x2">2 x 2 Grid</button>
+                <button class="layout-option" data-layout="3x2">3 x 2 Grid</button>
+                <button class="layout-option active" data-layout="custom">Custom</button>
+              </div>
+
+              <div class="modal-actions">
+                <button id="save-dashboard" class="primary-btn">Save Dashboard</button>
+                <button id="reset-dashboard" class="secondary-btn">Reset to Default</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

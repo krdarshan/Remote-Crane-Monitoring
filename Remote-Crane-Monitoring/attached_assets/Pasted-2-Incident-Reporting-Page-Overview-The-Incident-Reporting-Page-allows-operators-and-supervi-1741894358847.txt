@@ -1,0 +1,82 @@
+2️⃣ Incident Reporting Page 🛠️
+🔸 Overview
+The Incident Reporting Page allows operators and supervisors to manually report crane issues if an automated alert wasn't triggered. This feature ensures that undetected problems (e.g., structural cracks, unusual noises, control malfunctions) are logged and addressed quickly.
+
+🔹 Features to Include:
+✅ Manual Issue Reporting:
+
+Operators can log an issue manually with crane details (ID, location, issue type).
+Helps capture problems that may not trigger automated alerts.
+✅ Severity Level Categorization:
+
+Allows users to classify the issue as:
+🟢 Minor – Can be fixed during routine maintenance.
+🟡 Moderate – Needs attention soon.
+🔴 Critical – Immediate action required.
+✅ Photo & Video Upload:
+
+Operators can upload images/videos of the issue for better documentation.
+Helps the maintenance team visually inspect the damage before scheduling repairs.
+✅ Comments & Technician Notes:
+
+Users can add descriptions, observations, and specific failure patterns.
+The maintenance team can respond and update the issue status.
+✅ Status Updates & Workflow Tracking:
+
+Issues move through different statuses:
+🟡 Reported → 🟠 In Progress → 🟢 Resolved
+Ensures proper tracking and accountability.
+✅ Notifications & Assignment System:
+
+Notify relevant maintenance staff via email, SMS, or in-app alerts.
+Assign the issue to a specific technician or team.
+3️⃣ Historical Data & Trends Page 📊
+🔸 Overview
+This page stores and visualizes historical crane data, showing past performance trends, energy consumption, and failure history. This data helps in predictive maintenance and future planning.
+
+🔹 Features to Include:
+✅ Crane Failure & Maintenance History:
+
+View past failure reports, component replacements, and major repairs.
+Track how often specific parts fail (e.g., motor failures, hydraulic issues).
+✅ Energy Consumption & Usage Trends:
+
+Monitor daily, weekly, and monthly power consumption.
+Identify energy inefficiencies to reduce operational costs.
+✅ Downtime & Operational Efficiency Reports:
+
+Analyze how often cranes are in use vs. under maintenance.
+Helps optimize scheduling and reduce downtime.
+✅ Export Reports & Custom Data Filters:
+
+Users can filter data by date, location, or crane type.
+Generate reports in PDF, Excel, or CSV formats.
+✅ AI-Based Maintenance Predictions:
+
+Uses historical data to forecast potential failures.
+Helps teams schedule maintenance in advance, preventing breakdowns.
+4️⃣ AI-Based Failure Prediction System 🤖
+🔸 Overview
+This system uses machine learning algorithms to analyze crane sensor data and predict potential failures before they happen.
+
+🔹 Features to Include:
+✅ Predictive Maintenance Dashboard:
+
+Uses AI to analyze historical sensor readings (temperature, vibration, load).
+Identifies patterns leading to failures before they occur.
+✅ High-Risk Crane Detection:
+
+AI ranks cranes based on failure probability (🟢 Low, 🟡 Medium, 🔴 High).
+Alerts the maintenance team about cranes requiring urgent inspection.
+✅ Anomaly Detection in Real-Time Data:
+
+AI detects unusual spikes in vibration, temperature, or pressure.
+Helps prevent accidents and costly breakdowns.
+✅ Machine Learning Model Training:
+
+Continuously learns from new failure reports and sensor readings.
+Becomes more accurate over time.
+✅ Integration with Maintenance Scheduling:
+
+Automatically recommends maintenance dates for at-risk cranes.
+Ensures timely inspections before failures occur.

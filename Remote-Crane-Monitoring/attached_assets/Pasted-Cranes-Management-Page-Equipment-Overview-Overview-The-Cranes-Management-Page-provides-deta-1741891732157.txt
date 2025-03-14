@@ -1,0 +1,52 @@
+Cranes Management Page (🚜 Equipment Overview)
+🌟 Overview:
+The Cranes Management Page provides detailed control over all registered cranes, including their maintenance schedules, operational history, and alerts.
+
+🔹 Features to be Added:
+✅ Bulk Operations:
+
+Upload crane data via CSV/Excel file import/export.
+Batch update crane settings & configurations.
+✅ QR Code Integration:
+
+Generate & scan QR codes for quick crane identification.
+Mobile scanning support for field operators.
+✅ Performance History Logs:
+
+Track past maintenance records, previous alerts, and repairs.
+View long-term performance trends and analytics.
+✅ Maintenance Scheduling System:
+
+Set up automated notifications & reminders for upcoming maintenance tasks.
+✅ Status Tracking & Advanced Filters:
+
+Color-coded status: Operational, Warning, Critical, Maintenance Required.
+Filter cranes by utilization, fault status, and maintenance schedules.
+✅ Crane Activity Summary:
+
+Show operation time, load capacity, and past failures.
+5️⃣ Alerts & Notifications Page (🚨 Critical Events Management)
+🌟 Overview:
+This page allows users to monitor, acknowledge, and escalate alerts related to crane performance and maintenance needs.
+
+🔹 Features to be Added:
+✅ Real-Time Alerting System:
+
+Live notifications for new alerts.
+Alert types: Temperature, Vibration, Load, Pressure anomalies, maintenance reminders.
+✅ Auto-Escalation System:
+
+If a critical alert remains unresolved, escalate it to higher-level users.
+Assign specific users or teams to high-priority alerts.
+✅ Alert Acknowledgment & Resolution Tracking:
+
+Users can acknowledge alerts and update their status (In Progress, Resolved, Requires Inspection).
+Timestamp when alerts are acknowledged & resolved.
+✅ Filtering & Search Options:
+
+Sort alerts by crane ID, severity, date, and acknowledgment status.
+Bulk acknowledgment option for managing multiple alerts.
+✅ Push & Email Notifications:
+
+Real-time push notifications for new critical alerts.
+Email notifications to admins & relevant teams.

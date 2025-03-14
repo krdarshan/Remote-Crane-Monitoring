@@ -1,0 +1,847 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crane Monitoring - Equipment Overview</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="cranes.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li class="active"><a href="cranes.html"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li><a href="#analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search cranes...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="cranes-content">
+        <div class="page-header">
+          <h1><i class="fas fa-truck-monster"></i> Cranes Management</h1>
+          <div class="page-actions">
+            <button class="action-btn" id="import-export-btn">
+              <i class="fas fa-file-import"></i> Import/Export
+            </button>
+            <button class="action-btn" id="add-crane-btn">
+              <i class="fas fa-plus"></i> Add New Crane
+            </button>
+            <button class="action-btn" id="batch-update-btn">
+              <i class="fas fa-edit"></i> Batch Update
+            </button>
+            <button class="action-btn" id="generate-qr-btn">
+              <i class="fas fa-qrcode"></i> Generate QR Codes
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-group">
+            <label for="status-filter">Status:</label>
+            <select id="status-filter">
+              <option value="all">All Status</option>
+              <option value="operational">Operational</option>
+              <option value="warning">Warning</option>
+              <option value="critical">Critical</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="site-filter">Site:</label>
+            <select id="site-filter">
+              <option value="all">All Sites</option>
+              <option value="site-a">Construction Site A</option>
+              <option value="site-b">Port Facility B</option>
+              <option value="site-c">Manufacturing Plant C</option>
+              <option value="site-d">Shipping Yard D</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="maintenance-filter">Maintenance:</label>
+            <select id="maintenance-filter">
+              <option value="all">All</option>
+              <option value="due">Due Soon</option>
+              <option value="overdue">Overdue</option>
+              <option value="completed">Recently Completed</option>
+              <option value="scheduled">Scheduled</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="utilization-filter">Utilization:</label>
+            <select id="utilization-filter">
+              <option value="all">All</option>
+              <option value="high">High (>75%)</option>
+              <option value="medium">Medium (25-75%)</option>
+              <option value="low">Low (<25%)</option>
+            </select>
+          </div>
+          <button class="reset-filter-btn">
+            <i class="fas fa-undo"></i> Reset Filters
+          </button>
+        </div>
+
+        <div class="cranes-table-container">
+          <table class="cranes-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all-cranes"></th>
+                <th>Crane ID <i class="fas fa-sort"></i></th>
+                <th>Location <i class="fas fa-sort"></i></th>
+                <th>Status <i class="fas fa-sort"></i></th>
+                <th>Last Maintenance <i class="fas fa-sort"></i></th>
+                <th>Next Maintenance <i class="fas fa-sort"></i></th>
+                <th>Utilization <i class="fas fa-sort"></i></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="status-operational">
+                <td><input type="checkbox" class="crane-select"></td>
+                <td>
+                  <div class="crane-id">
+                    <span>C-001</span>
+                    <button class="qr-btn" title="Show QR Code"><i class="fas fa-qrcode"></i></button>
+                  </div>
+                </td>
+                <td>Construction Site A</td>
+                <td><span class="status-badge operational">Operational</span></td>
+                <td>2023-06-12</td>
+                <td>2023-09-12</td>
+                <td>
+                  <div class="utilization-bar">
+                    <div class="utilization-progress" style="width: 45%"></div>
+                    <span>45%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Crane"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Crane"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-warning">
+                <td><input type="checkbox" class="crane-select"></td>
+                <td>
+                  <div class="crane-id">
+                    <span>C-002</span>
+                    <button class="qr-btn" title="Show QR Code"><i class="fas fa-qrcode"></i></button>
+                  </div>
+                </td>
+                <td>Port Facility B</td>
+                <td><span class="status-badge warning">Maintenance Due</span></td>
+                <td>2023-05-15</td>
+                <td>2023-08-15</td>
+                <td>
+                  <div class="utilization-bar">
+                    <div class="utilization-progress" style="width: 72%"></div>
+                    <span>72%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Crane"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Crane"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-critical">
+                <td><input type="checkbox" class="crane-select"></td>
+                <td>
+                  <div class="crane-id">
+                    <span>C-003</span>
+                    <button class="qr-btn" title="Show QR Code"><i class="fas fa-qrcode"></i></button>
+                  </div>
+                </td>
+                <td>Manufacturing Plant C</td>
+                <td><span class="status-badge critical">Critical Issue</span></td>
+                <td>2023-07-20</td>
+                <td>2023-10-20</td>
+                <td>
+                  <div class="utilization-bar">
+                    <div class="utilization-progress" style="width: 18%"></div>
+                    <span>18%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Crane"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Crane"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="status-maintenance">
+                <td><input type="checkbox" class="crane-select"></td>
+                <td>
+                  <div class="crane-id">
+                    <span>C-004</span>
+                    <button class="qr-btn" title="Show QR Code"><i class="fas fa-qrcode"></i></button>
+                  </div>
+                </td>
+                <td>Shipping Yard D</td>
+                <td><span class="status-badge maintenance">Under Maintenance</span></td>
+                <td>2023-08-01</td>
+                <td>2023-11-01</td>
+                <td>
+                  <div class="utilization-bar">
+                    <div class="utilization-progress" style="width: 0%"></div>
+                    <span>0%</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="table-action-btn view-btn" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="table-action-btn edit-btn" title="Edit Crane"><i class="fas fa-edit"></i></button>
+                    <button class="table-action-btn history-btn" title="View History"><i class="fas fa-history"></i></button>
+                    <button class="table-action-btn delete-btn" title="Delete Crane"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <span class="pagination-ellipsis">...</span>
+          <button class="pagination-btn">10</button>
+          <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Crane Details Modal -->
+  <div class="modal" id="crane-details-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Crane Details - C-001</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="maintenance">Maintenance History</button>
+          <button class="tab-btn" data-tab="performance">Performance History</button>
+          <button class="tab-btn" data-tab="alerts">Alerts History</button>
+        </div>
+        
+        <div class="tab-content active" id="tab-overview">
+          <div class="details-grid">
+            <div class="detail-card">
+              <h3>Basic Information</h3>
+              <div class="detail-item">
+                <span class="detail-label">Crane ID:</span>
+                <span class="detail-value">C-001</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Type:</span>
+                <span class="detail-value">Tower Crane</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Manufacturer:</span>
+                <span class="detail-value">CraneTech Industries</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Model:</span>
+                <span class="detail-value">CT-5000X</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Serial Number:</span>
+                <span class="detail-value">CT5000X-2023-1234</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Year:</span>
+                <span class="detail-value">2021</span>
+              </div>
+            </div>
+            
+            <div class="detail-card">
+              <h3>Current Status</h3>
+              <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value status-operational">Operational</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Current Load:</span>
+                <span class="detail-value">45%</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Temperature:</span>
+                <span class="detail-value">72°C</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Last Inspection:</span>
+                <span class="detail-value">2023-06-12</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Next Maintenance:</span>
+                <span class="detail-value">2023-09-12</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Operator:</span>
+                <span class="detail-value">John D.</span>
+              </div>
+            </div>
+            
+            <div class="detail-card">
+              <h3>Location & Assignment</h3>
+              <div class="detail-item">
+                <span class="detail-label">Site:</span>
+                <span class="detail-value">Construction Site A</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Address:</span>
+                <span class="detail-value">123 Construction Ave, Building Zone</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">GPS:</span>
+                <span class="detail-value">40.7128° N, 74.0060° W</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Project:</span>
+                <span class="detail-value">Downtown Highrise</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Contract:</span>
+                <span class="detail-value">PROJ-2023-567</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Deployment Date:</span>
+                <span class="detail-value">2023-01-15</span>
+              </div>
+            </div>
+            
+            <div class="detail-card">
+              <h3>Technical Specifications</h3>
+              <div class="detail-item">
+                <span class="detail-label">Max Load:</span>
+                <span class="detail-value">12,000 kg</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Max Height:</span>
+                <span class="detail-value">80 m</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Jib Length:</span>
+                <span class="detail-value">60 m</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Power Source:</span>
+                <span class="detail-value">Electric</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Voltage:</span>
+                <span class="detail-value">400V</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Sensors:</span>
+                <span class="detail-value">Load, Temp, Vibration, Tilt</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="qr-section">
+            <h3>Quick Access</h3>
+            <div class="qr-container">
+              <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=C-001" alt="QR Code for C-001">
+              </div>
+              <div class="qr-actions">
+                <button class="primary-btn"><i class="fas fa-print"></i> Print QR Code</button>
+                <button class="secondary-btn"><i class="fas fa-download"></i> Download QR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="tab-maintenance">
+          <div class="history-filters">
+            <div class="date-range">
+              <label>Date Range:</label>
+              <input type="date" id="maintenance-from-date">
+              <span>to</span>
+              <input type="date" id="maintenance-to-date">
+            </div>
+            <div class="filter-btn-group">
+              <button class="filter-btn active">All</button>
+              <button class="filter-btn">Scheduled</button>
+              <button class="filter-btn">Emergency</button>
+              <button class="filter-btn">Inspections</button>
+            </div>
+          </div>
+          
+          <div class="history-timeline">
+            <div class="timeline-item completed">
+              <div class="timeline-icon">
+                <i class="fas fa-tools"></i>
+              </div>
+              <div class="timeline-content">
+                <h4>Scheduled Maintenance</h4>
+                <p class="timeline-date">June 12, 2023</p>
+                <p>Performed regular inspection and hydraulic system maintenance.</p>
+                <div class="timeline-details">
+                  <span class="detail-chip">Oil Change</span>
+                  <span class="detail-chip">Bearing Check</span>
+                  <span class="detail-chip">Cable Inspection</span>
+                </div>
+                <div class="technician-info">
+                  <span class="technician"><i class="fas fa-user-hard-hat"></i> Mike T. (Lead)</span>
+                  <span class="hours"><i class="fas fa-clock"></i> 4.5 hours</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeline-item completed">
+              <div class="timeline-icon">
+                <i class="fas fa-clipboard-check"></i>
+              </div>
+              <div class="timeline-content">
+                <h4>Safety Inspection</h4>
+                <p class="timeline-date">March 15, 2023</p>
+                <p>Quarterly safety inspection - passed all checks.</p>
+                <div class="timeline-details">
+                  <span class="detail-chip">Safety Check</span>
+                  <span class="detail-chip">Certification</span>
+                </div>
+                <div class="technician-info">
+                  <span class="technician"><i class="fas fa-user-hard-hat"></i> Safety Team</span>
+                  <span class="hours"><i class="fas fa-clock"></i> 2 hours</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeline-item emergency">
+              <div class="timeline-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="timeline-content">
+                <h4>Emergency Repair</h4>
+                <p class="timeline-date">February 3, 2023</p>
+                <p>Emergency repair for hydraulic fluid leak detected during operation.</p>
+                <div class="timeline-details">
+                  <span class="detail-chip">Hydraulic System</span>
+                  <span class="detail-chip">Emergency</span>
+                  <span class="detail-chip">Leak Repair</span>
+                </div>
+                <div class="technician-info">
+                  <span class="technician"><i class="fas fa-user-hard-hat"></i> Emergency Team</span>
+                  <span class="hours"><i class="fas fa-clock"></i> 6 hours</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="maintenance-stats">
+            <div class="stat-box">
+              <h4>Total Maintenance Events</h4>
+              <p class="stat-number">12</p>
+              <span class="stat-period">Last 12 months</span>
+            </div>
+            <div class="stat-box">
+              <h4>Average Downtime</h4>
+              <p class="stat-number">4.2 hrs</p>
+              <span class="stat-period">Per maintenance</span>
+            </div>
+            <div class="stat-box">
+              <h4>Emergency Repairs</h4>
+              <p class="stat-number">2</p>
+              <span class="stat-period">Last 12 months</span>
+            </div>
+            <div class="stat-box">
+              <h4>Next Scheduled</h4>
+              <p class="stat-number">92 days</p>
+              <span class="stat-period">September 12, 2023</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="tab-performance">
+          <div class="history-filters">
+            <div class="date-range">
+              <label>Date Range:</label>
+              <input type="date" id="performance-from-date">
+              <span>to</span>
+              <input type="date" id="performance-to-date">
+            </div>
+            <div class="metric-selector">
+              <label>Metric:</label>
+              <select id="performance-metric">
+                <option value="utilization">Utilization Rate</option>
+                <option value="load">Load Capacity</option>
+                <option value="temperature">Motor Temperature</option>
+                <option value="vibration">Vibration Levels</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="performance-chart-container">
+            <canvas id="cranePerformanceChart"></canvas>
+          </div>
+          
+          <div class="performance-highlights">
+            <h3>Performance Highlights</h3>
+            <div class="highlights-cards">
+              <div class="highlight-card">
+                <div class="highlight-icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="highlight-details">
+                  <h4>Average Utilization</h4>
+                  <p class="highlight-value">67%</p>
+                  <p class="highlight-trend positive">↑ 5% from previous period</p>
+                </div>
+              </div>
+              
+              <div class="highlight-card">
+                <div class="highlight-icon">
+                  <i class="fas fa-weight-hanging"></i>
+                </div>
+                <div class="highlight-details">
+                  <h4>Peak Load</h4>
+                  <p class="highlight-value">9,850 kg</p>
+                  <p class="highlight-trend neutral">No significant change</p>
+                </div>
+              </div>
+              
+              <div class="highlight-card">
+                <div class="highlight-icon">
+                  <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div class="highlight-details">
+                  <h4>Maximum Temperature</h4>
+                  <p class="highlight-value">85°C</p>
+                  <p class="highlight-trend negative">↑ 10°C from average</p>
+                </div>
+              </div>
+              
+              <div class="highlight-card">
+                <div class="highlight-icon">
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="highlight-details">
+                  <h4>Alert Frequency</h4>
+                  <p class="highlight-value">3 per month</p>
+                  <p class="highlight-trend positive">↓ 40% from previous period</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="tab-alerts">
+          <div class="history-filters">
+            <div class="date-range">
+              <label>Date Range:</label>
+              <input type="date" id="alerts-from-date">
+              <span>to</span>
+              <input type="date" id="alerts-to-date">
+            </div>
+            <div class="filter-btn-group">
+              <button class="filter-btn active">All</button>
+              <button class="filter-btn">Critical</button>
+              <button class="filter-btn">Warning</button>
+              <button class="filter-btn">Information</button>
+            </div>
+          </div>
+          
+          <div class="alerts-table-container">
+            <table class="alerts-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Severity</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Response Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2023-07-28 09:45</td>
+                  <td>Temperature</td>
+                  <td><span class="severity-badge warning">Warning</span></td>
+                  <td>Motor temperature exceeding normal range (82°C)</td>
+                  <td><span class="status-badge resolved">Resolved</span></td>
+                  <td>15 min</td>
+                </tr>
+                <tr>
+                  <td>2023-06-15 14:30</td>
+                  <td>Vibration</td>
+                  <td><span class="severity-badge critical">Critical</span></td>
+                  <td>Abnormal vibration detected in main bearing</td>
+                  <td><span class="status-badge resolved">Resolved</span></td>
+                  <td>8 min</td>
+                </tr>
+                <tr>
+                  <td>2023-05-02 11:20</td>
+                  <td>Load</td>
+                  <td><span class="severity-badge warning">Warning</span></td>
+                  <td>Load approaching maximum capacity (91%)</td>
+                  <td><span class="status-badge resolved">Resolved</span></td>
+                  <td>12 min</td>
+                </tr>
+                <tr>
+                  <td>2023-04-18 08:15</td>
+                  <td>System</td>
+                  <td><span class="severity-badge info">Info</span></td>
+                  <td>Scheduled maintenance reminder</td>
+                  <td><span class="status-badge acknowledged">Acknowledged</span></td>
+                  <td>45 min</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="alerts-summary">
+            <h3>Alerts Summary</h3>
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div class="summary-icon critical">
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="summary-details">
+                  <h4>Critical Alerts</h4>
+                  <p>3</p>
+                  <span>Last 6 months</span>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon warning">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="summary-details">
+                  <h4>Warning Alerts</h4>
+                  <p>12</p>
+                  <span>Last 6 months</span>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon info">
+                  <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="summary-details">
+                  <h4>Info Alerts</h4>
+                  <p>8</p>
+                  <span>Last 6 months</span>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="summary-details">
+                  <h4>Avg. Response Time</h4>
+                  <p>14 min</p>
+                  <span>All alerts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-btn">Schedule Maintenance</button>
+        <button class="secondary-btn">Download Report</button>
+        <button class="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import/Export Modal -->
+  <div class="modal" id="import-export-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Import/Export Crane Data</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="import">Import Data</button>
+          <button class="tab-btn" data-tab="export">Export Data</button>
+        </div>
+        
+        <div class="tab-content active" id="tab-import">
+          <div class="import-section">
+            <div class="upload-area">
+              <i class="fas fa-file-upload"></i>
+              <h3>Drag & Drop File Here</h3>
+              <p>or</p>
+              <button class="browse-btn">Browse Files</button>
+              <input type="file" id="file-upload" hidden>
+              <p class="file-formats">Supported formats: CSV, Excel (.xlsx, .xls)</p>
+            </div>
+            
+            <div class="import-options">
+              <h3>Import Options</h3>
+              <div class="option-item">
+                <input type="checkbox" id="override-existing" checked>
+                <label for="override-existing">Override existing records</label>
+              </div>
+              <div class="option-item">
+                <input type="checkbox" id="validate-data" checked>
+                <label for="validate-data">Validate data before import</label>
+              </div>
+              <div class="option-item">
+                <input type="checkbox" id="import-maintenance">
+                <label for="import-maintenance">Include maintenance history</label>
+              </div>
+              <div class="option-item">
+                <input type="checkbox" id="import-alerts">
+                <label for="import-alerts">Include alerts history</label>
+              </div>
+            </div>
+            
+            <div class="template-download">
+              <h4>Need a template?</h4>
+              <button class="template-btn"><i class="fas fa-download"></i> Download Import Template</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tab-content" id="tab-export">
+          <div class="export-section">
+            <div class="export-options">
+              <h3>Export Options</h3>
+              
+              <div class="option-group">
+                <h4>Format</h4>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="format-csv" name="export-format" checked>
+                    <label for="format-csv">CSV</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="format-excel" name="export-format">
+                    <label for="format-excel">Excel (.xlsx)</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="format-pdf" name="export-format">
+                    <label for="format-pdf">PDF</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="option-group">
+                <h4>Data to Include</h4>
+                <div class="checkbox-group">
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="include-basic" checked>
+                    <label for="include-basic">Basic Crane Information</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="include-maintenance" checked>
+                    <label for="include-maintenance">Maintenance History</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="include-performance" checked>
+                    <label for="include-performance">Performance Data</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="include-alerts" checked>
+                    <label for="include-alerts">Alert History</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="option-group">
+                <h4>Date Range</h4>
+                <div class="date-inputs">
+                  <div class="date-input">
+                    <label for="export-from-date">From</label>
+                    <input type="date" id="export-from-date">
+                  </div>
+                  <div class="date-input">
+                    <label for="export-to-date">To</label>
+                    <input type="date" id="export-to-date">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="option-group">
+                <h4>Cranes to Include</h4>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="all-cranes" name="crane-selection" checked>
+                    <label for="all-cranes">All Cranes</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="selected-cranes" name="crane-selection">
+                    <label for="selected-cranes">Selected Cranes Only</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="filtered-cranes" name="crane-selection">
+                    <label for="filtered-cranes">Current Filtered Results</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-btn" id="import-export-action">Import Data</button>
+        <button class="close-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="cranes.js"></script>
+</body>
+</html>

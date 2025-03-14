@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crane Monitoring - Reports & Analytics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="reports.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="cranes.html"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li class="active"><a href="reports.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search reports...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="reports-content">
+        <div class="page-header">
+          <h1><i class="fas fa-chart-line"></i> Reports & Analytics</h1>
+          <div class="page-actions">
+            <button class="action-btn" id="create-report-btn">
+              <i class="fas fa-file-alt"></i> Create Report
+            </button>
+            <button class="action-btn" id="schedule-report-btn">
+              <i class="fas fa-clock"></i> Schedule Report
+            </button>
+            <button class="action-btn" id="export-report-btn">
+              <i class="fas fa-file-export"></i> Export
+            </button>
+            <button class="action-btn" id="print-report-btn">
+              <i class="fas fa-print"></i> Print
+            </button>
+          </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="analytics-container">
+          <div class="analytics-card" id="predictive-maintenance">
+            <div class="card-header">
+              <h2>Predictive Maintenance</h2>
+              <div class="card-actions">
+                <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+                <select class="time-range-selector">
+                  <option value="30">Last 30 days</option>
+                  <option value="60">Last 60 days</option>
+                  <option value="90" selected>Last 90 days</option>
+                  <option value="180">Last 180 days</option>
+                </select>
+              </div>
+            </div>
+            <div class="predictive-grid">
+              <div class="predictive-chart">
+                <canvas id="failurePredictionChart"></canvas>
+              </div>
+              <div class="prediction-insights">
+                <h3>AI Insights</h3>
+                <div class="insight-item high">
+                  <div class="insight-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <div class="insight-content">
+                    <h4>High Risk: Hydraulic System</h4>
+                    <p>Crane C-003 showing irregular pressure patterns. 85% probability of failure within 14 days.</p>
+                    <button class="action-link">Schedule Maintenance</button>
+                  </div>
+                </div>
+                <div class="insight-item medium">
+                  <div class="insight-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                  </div>
+                  <div class="insight-content">
+                    <h4>Medium Risk: Motor Bearings</h4>
+                    <p>Crane C-001 showing increased vibration patterns. 62% probability of issues within 30 days.</p>
+                    <button class="action-link">Schedule Inspection</button>
+                  </div>
+                </div>
+                <div class="insight-item low">
+                  <div class="insight-icon">
+                    <i class="fas fa-info-circle"></i>
+                  </div>
+                  <div class="insight-content">
+                    <h4>Efficiency Alert</h4>
+                    <p>Crane C-002 operating at 18% below optimal efficiency. Recommend calibration.</p>
+                    <button class="action-link">View Details</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Reports Section -->
+          <div class="analytics-card" id="comparison-reports">
+            <div class="card-header">
+              <h2>Crane Comparison</h2>
+              <div class="card-actions">
+                <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+                <button class="customize-btn"><i class="fas fa-sliders-h"></i></button>
+              </div>
+            </div>
+            <div class="comparison-container">
+              <div class="comparison-controls">
+                <div class="control-group">
+                  <label>Select Cranes:</label>
+                  <div class="crane-selector">
+                    <select id="crane-select-1">
+                      <option value="C-001">Crane C-001</option>
+                      <option value="C-002" selected>Crane C-002</option>
+                      <option value="C-003">Crane C-003</option>
+                      <option value="C-004">Crane C-004</option>
+                    </select>
+                    <select id="crane-select-2">
+                      <option value="C-001">Crane C-001</option>
+                      <option value="C-002">Crane C-002</option>
+                      <option value="C-003" selected>Crane C-003</option>
+                      <option value="C-004">Crane C-004</option>
+                    </select>
+                    <button id="add-crane-comparison"><i class="fas fa-plus"></i> Add</button>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label>Metrics:</label>
+                  <div class="metric-selector">
+                    <label class="metric-checkbox">
+                      <input type="checkbox" value="uptime" checked> Uptime
+                    </label>
+                    <label class="metric-checkbox">
+                      <input type="checkbox" value="maintenance" checked> Maintenance Frequency
+                    </label>
+                    <label class="metric-checkbox">
+                      <input type="checkbox" value="load" checked> Load Capacity
+                    </label>
+                    <label class="metric-checkbox">
+                      <input type="checkbox" value="temperature"> Temperature
+                    </label>
+                    <label class="metric-checkbox">
+                      <input type="checkbox" value="vibration"> Vibration
+                    </label>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label>Time Period:</label>
+                  <div class="date-range">
+                    <input type="date" id="comparison-start-date" value="2023-01-01">
+                    <span>to</span>
+                    <input type="date" id="comparison-end-date" value="2023-12-31">
+                  </div>
+                </div>
+              </div>
+              <div class="comparison-chart-container">
+                <canvas id="comparisonChart"></canvas>
+              </div>
+              <div class="comparison-summary">
+                <h3>Comparison Summary</h3>
+                <div class="summary-grid">
+                  <div class="summary-card">
+                    <h4>Uptime Difference</h4>
+                    <p class="summary-value positive">+12.5%</p>
+                    <p class="summary-detail">Crane C-002 has higher uptime than C-003</p>
+                  </div>
+                  <div class="summary-card">
+                    <h4>Maintenance Cost</h4>
+                    <p class="summary-value negative">+$3,250</p>
+                    <p class="summary-detail">Crane C-003 requires more maintenance</p>
+                  </div>
+                  <div class="summary-card">
+                    <h4>Efficiency Rating</h4>
+                    <p class="summary-value positive">+8.7%</p>
+                    <p class="summary-detail">Crane C-002 is more efficient</p>
+                  </div>
+                  <div class="summary-card">
+                    <h4>Alert Frequency</h4>
+                    <p class="summary-value negative">+14 alerts</p>
+                    <p class="summary-detail">Crane C-003 generates more alerts</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Report Builder Section -->
+          <div class="analytics-card" id="custom-report">
+            <div class="card-header">
+              <h2>Custom Report Builder</h2>
+              <div class="card-actions">
+                <button id="save-report-template"><i class="fas fa-save"></i> Save Template</button>
+                <button id="load-report-template"><i class="fas fa-folder-open"></i> Load Template</button>
+              </div>
+            </div>
+            <div class="report-builder">
+              <div class="report-builder-sidebar">
+                <div class="builder-section">
+                  <h3>Report Components</h3>
+                  <div class="component-list">
+                    <div class="component-item" draggable="true" data-component="table">
+                      <i class="fas fa-table"></i> Data Table
+                    </div>
+                    <div class="component-item" draggable="true" data-component="line-chart">
+                      <i class="fas fa-chart-line"></i> Line Chart
+                    </div>
+                    <div class="component-item" draggable="true" data-component="bar-chart">
+                      <i class="fas fa-chart-bar"></i> Bar Chart
+                    </div>
+                    <div class="component-item" draggable="true" data-component="pie-chart">
+                      <i class="fas fa-chart-pie"></i> Pie Chart
+                    </div>
+                    <div class="component-item" draggable="true" data-component="summary">
+                      <i class="fas fa-file-alt"></i> Summary
+                    </div>
+                    <div class="component-item" draggable="true" data-component="kpi">
+                      <i class="fas fa-tachometer-alt"></i> KPI Cards
+                    </div>
+                  </div>
+                </div>
+                <div class="builder-section">
+                  <h3>Data Sources</h3>
+                  <div class="data-source-list">
+                    <div class="data-source-item">
+                      <input type="checkbox" id="data-crane-status" checked>
+                      <label for="data-crane-status">Crane Status</label>
+                    </div>
+                    <div class="data-source-item">
+                      <input type="checkbox" id="data-maintenance" checked>
+                      <label for="data-maintenance">Maintenance Records</label>
+                    </div>
+                    <div class="data-source-item">
+                      <input type="checkbox" id="data-alerts">
+                      <label for="data-alerts">Alert History</label>
+                    </div>
+                    <div class="data-source-item">
+                      <input type="checkbox" id="data-performance" checked>
+                      <label for="data-performance">Performance Metrics</label>
+                    </div>
+                    <div class="data-source-item">
+                      <input type="checkbox" id="data-operator">
+                      <label for="data-operator">Operator Logs</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="builder-section">
+                  <h3>Filter Options</h3>
+                  <div class="filter-options">
+                    <div class="filter-option">
+                      <label for="report-date-range">Date Range:</label>
+                      <select id="report-date-range">
+                        <option value="30">Last 30 Days</option>
+                        <option value="90" selected>Last 90 Days</option>
+                        <option value="180">Last 180 Days</option>
+                        <option value="365">Last Year</option>
+                        <option value="custom">Custom Range</option>
+                      </select>
+                    </div>
+                    <div class="filter-option">
+                      <label for="report-cranes">Cranes:</label>
+                      <select id="report-cranes">
+                        <option value="all" selected>All Cranes</option>
+                        <option value="selected">Selected Cranes</option>
+                      </select>
+                    </div>
+                    <div class="filter-option">
+                      <label for="report-events">Events:</label>
+                      <select id="report-events">
+                        <option value="all" selected>All Events</option>
+                        <option value="critical">Critical Only</option>
+                        <option value="maintenance">Maintenance Only</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="report-builder-canvas">
+                <div class="builder-header">
+                  <input type="text" id="report-title" value="Crane Performance Report" placeholder="Report Title">
+                  <span class="builder-instructions">Drag components here to build your report</span>
+                </div>
+                <div class="canvas-dropzone">
+                  <!-- Sample component previews -->
+                  <div class="report-component" data-component="kpi">
+                    <div class="component-header">
+                      <h4>Key Performance Indicators</h4>
+                      <div class="component-controls">
+                        <button class="edit-component"><i class="fas fa-edit"></i></button>
+                        <button class="remove-component"><i class="fas fa-times"></i></button>
+                      </div>
+                    </div>
+                    <div class="kpi-preview">
+                      <div class="kpi-card">
+                        <h5>Average Uptime</h5>
+                        <div class="kpi-value">92.7%</div>
+                      </div>
+                      <div class="kpi-card">
+                        <h5>Maintenance Costs</h5>
+                        <div class="kpi-value">$32,450</div>
+                      </div>
+                      <div class="kpi-card">
+                        <h5>Alert Count</h5>
+                        <div class="kpi-value">142</div>
+                      </div>
+                      <div class="kpi-card">
+                        <h5>Efficiency Rating</h5>
+                        <div class="kpi-value">86.3%</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="report-component" data-component="line-chart">
+                    <div class="component-header">
+                      <h4>Performance Trends</h4>
+                      <div class="component-controls">
+                        <button class="edit-component"><i class="fas fa-edit"></i></button>
+                        <button class="remove-component"><i class="fas fa-times"></i></button>
+                      </div>
+                    </div>
+                    <div class="chart-preview line-chart-preview"></div>
+                  </div>
+                  <div class="report-component" data-component="table">
+                    <div class="component-header">
+                      <h4>Maintenance Summary</h4>
+                      <div class="component-controls">
+                        <button class="edit-component"><i class="fas fa-edit"></i></button>
+                        <button class="remove-component"><i class="fas fa-times"></i></button>
+                      </div>
+                    </div>
+                    <div class="table-preview">
+                      <table class="preview-table">
+                        <thead>
+                          <tr>
+                            <th>Crane ID</th>
+                            <th>Maintenance Count</th>
+                            <th>Total Cost</th>
+                            <th>Average Downtime</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>C-001</td>
+                            <td>8</td>
+                            <td>$7,245</td>
+                            <td>3.2 hrs</td>
+                          </tr>
+                          <tr>
+                            <td>C-002</td>
+                            <td>6</td>
+                            <td>$5,820</td>
+                            <td>2.8 hrs</td>
+                          </tr>
+                          <tr>
+                            <td>C-003</td>
+                            <td>12</td>
+                            <td>$11,350</td>
+                            <td>4.5 hrs</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="builder-actions">
+                  <button id="generate-report" class="primary-btn"><i class="fas fa-file-export"></i> Generate Report</button>
+                  <button id="preview-report" class="secondary-btn"><i class="fas fa-eye"></i> Preview</button>
+                  <button id="clear-builder" class="danger-btn"><i class="fas fa-trash"></i> Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scheduled Reports Section -->
+          <div class="analytics-card" id="scheduled-reports">
+            <div class="card-header">
+              <h2>Scheduled Reports</h2>
+              <div class="card-actions">
+                <button id="add-schedule" class="primary-btn"><i class="fas fa-plus"></i> Add Schedule</button>
+              </div>
+            </div>
+            <div class="schedule-list-container">
+              <table class="schedule-table">
+                <thead>
+                  <tr>
+                    <th>Report Name</th>
+                    <th>Frequency</th>
+                    <th>Recipients</th>
+                    <th>Last Generated</th>
+                    <th>Next Scheduled</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Monthly Maintenance Summary</td>
+                    <td>Monthly (1st)</td>
+                    <td>Operations Team (5)</td>
+                    <td>Jul 1, 2023</td>
+                    <td>Aug 1, 2023</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="pause-btn"><i class="fas fa-pause"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Weekly Performance Report</td>
+                    <td>Weekly (Monday)</td>
+                    <td>Management Team (3)</td>
+                    <td>Jul 24, 2023</td>
+                    <td>Jul 31, 2023</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="pause-btn"><i class="fas fa-pause"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Quarterly Financial Analysis</td>
+                    <td>Quarterly</td>
+                    <td>Executive Team (2)</td>
+                    <td>Jun 30, 2023</td>
+                    <td>Sep 30, 2023</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="pause-btn"><i class="fas fa-pause"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Daily Alert Summary</td>
+                    <td>Daily (8:00 AM)</td>
+                    <td>Technical Team (8)</td>
+                    <td>Jul 30, 2023</td>
+                    <td>Jul 31, 2023</td>
+                    <td><span class="status-badge paused">Paused</span></td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                        <button class="resume-btn"><i class="fas fa-play"></i></button>
+                        <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Schedule Modal -->
+  <div class="modal" id="schedule-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Schedule New Report</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="schedule-name">Report Name</label>
+          <input type="text" id="schedule-name" placeholder="Enter report name">
+        </div>
+        <div class="form-group">
+          <label for="schedule-template">Report Template</label>
+          <select id="schedule-template">
+            <option value="">Select a template</option>
+            <option value="maintenance-summary">Maintenance Summary</option>
+            <option value="performance-analysis">Performance Analysis</option>
+            <option value="alerts-digest">Alerts Digest</option>
+            <option value="efficiency-report">Efficiency Report</option>
+            <option value="custom">Custom Report</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="schedule-frequency">Frequency</label>
+          <select id="schedule-frequency">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+          </select>
+        </div>
+        <div class="form-group frequency-details" id="weekly-details">
+          <label>Day of Week</label>
+          <div class="day-selector">
+            <label class="day-option">
+              <input type="radio" name="weekday" value="1" checked> Monday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="2"> Tuesday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="3"> Wednesday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="4"> Thursday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="5"> Friday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="6"> Saturday
+            </label>
+            <label class="day-option">
+              <input type="radio" name="weekday" value="0"> Sunday
+            </label>
+          </div>
+        </div>
+        <div class="form-group frequency-details" id="monthly-details">
+          <label>Day of Month</label>
+          <select id="monthday">
+            <option value="1">1st</option>
+            <option value="15">15th</option>
+            <option value="last">Last day</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="schedule-time">Time</label>
+          <input type="time" id="schedule-time" value="08:00">
+        </div>
+        <div class="form-group">
+          <label>Recipients</label>
+          <div class="recipient-list">
+            <div class="recipient-group">
+              <label>
+                <input type="checkbox" value="operations" checked> Operations Team
+              </label>
+            </div>
+            <div class="recipient-group">
+              <label>
+                <input type="checkbox" value="management" checked> Management Team
+              </label>
+            </div>
+            <div class="recipient-group">
+              <label>
+                <input type="checkbox" value="technical"> Technical Team
+              </label>
+            </div>
+            <div class="recipient-group">
+              <label>
+                <input type="checkbox" value="executive"> Executive Team
+              </label>
+            </div>
+          </div>
+          <button id="add-recipients" class="secondary-btn"><i class="fas fa-plus"></i> Add Additional Recipients</button>
+        </div>
+        <div class="form-group">
+          <label for="schedule-format">Delivery Format</label>
+          <select id="schedule-format">
+            <option value="pdf">PDF Attachment</option>
+            <option value="excel">Excel Attachment</option>
+            <option value="both">Both PDF & Excel</option>
+            <option value="link">Link to Online Report</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="save-schedule" class="primary-btn">Save Schedule</button>
+        <button class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="reports.js"></script>
+</body>
+</html>

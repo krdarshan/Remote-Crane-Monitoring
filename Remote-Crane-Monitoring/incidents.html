@@ -1,0 +1,853 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CraneMonitor - Incident Reporting</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="incidents.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <h2>CraneMonitor</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="cranes.html"><i class="fas fa-truck-monster"></i> Cranes</a></li>
+          <li><a href="maintenance.html"><i class="fas fa-tools"></i> Maintenance</a></li>
+          <li><a href="reports.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="alerts.html"><i class="fas fa-bell"></i> Alerts</a></li>
+          <li class="active"><a href="incidents.html"><i class="fas fa-exclamation-triangle"></i> Incidents</a></li>
+          <li><a href="admin.html"><i class="fas fa-cog"></i> Admin</a></li>
+        </ul>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="user-details">
+          <p class="user-name">Admin User</p>
+          <p class="user-role">Administrator</p>
+        </div>
+        <button id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search incidents...">
+        </div>
+        <div class="header-actions">
+          <button class="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">3</span>
+          </button>
+          <button class="help-btn">
+            <i class="fas fa-question-circle"></i>
+          </button>
+          <a href="profile.html" class="profile-link">
+            <i class="fas fa-user"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="incidents-content">
+        <div class="page-header">
+          <h1><i class="fas fa-exclamation-triangle"></i> Incident Reporting</h1>
+          <div class="page-tabs">
+            <button class="tab-btn active" data-tab="report">Report Incident</button>
+            <button class="tab-btn" data-tab="active">Active Incidents</button>
+            <button class="tab-btn" data-tab="history">Incident History</button>
+            <button class="tab-btn" data-tab="trends">Analytics & Trends</button>
+          </div>
+        </div>
+
+        <!-- Report Incident Tab -->
+        <div class="tab-content active" id="report-tab">
+          <div class="panel-header">
+            <h2>Report New Incident</h2>
+            <div class="panel-actions">
+              <button class="action-btn" id="save-draft-btn">
+                <i class="fas fa-save"></i> Save Draft
+              </button>
+              <button class="action-btn" id="submit-incident-btn">
+                <i class="fas fa-paper-plane"></i> Submit Report
+              </button>
+            </div>
+          </div>
+          
+          <form id="incident-form" class="incident-form">
+            <div class="form-sections">
+              <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="crane-id">Crane ID*</label>
+                    <select id="crane-id" required>
+                      <option value="">Select a crane</option>
+                      <option value="C-001">Crane #C-001 (Construction Site A)</option>
+                      <option value="C-002">Crane #C-002 (Port Facility B)</option>
+                      <option value="C-003">Crane #C-003 (Manufacturing Plant C)</option>
+                      <option value="C-004">Crane #C-004 (Shipping Yard D)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="incident-date">Date & Time*</label>
+                    <input type="datetime-local" id="incident-date" required>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="incident-type">Incident Type*</label>
+                    <select id="incident-type" required>
+                      <option value="">Select incident type</option>
+                      <option value="mechanical">Mechanical Failure</option>
+                      <option value="electrical">Electrical Issue</option>
+                      <option value="hydraulic">Hydraulic System</option>
+                      <option value="structural">Structural Damage</option>
+                      <option value="control">Control System</option>
+                      <option value="operator">Operator Error</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="incident-severity">Severity Level*</label>
+                    <div class="severity-options">
+                      <label class="severity-option">
+                        <input type="radio" name="severity" value="minor">
+                        <span class="severity-label minor">Minor</span>
+                      </label>
+                      <label class="severity-option">
+                        <input type="radio" name="severity" value="moderate">
+                        <span class="severity-label moderate">Moderate</span>
+                      </label>
+                      <label class="severity-option">
+                        <input type="radio" name="severity" value="critical">
+                        <span class="severity-label critical">Critical</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-section">
+                <h3>Incident Details</h3>
+                <div class="form-group">
+                  <label for="incident-title">Incident Title*</label>
+                  <input type="text" id="incident-title" placeholder="Brief description of the incident" required>
+                </div>
+                <div class="form-group">
+                  <label for="incident-description">Detailed Description*</label>
+                  <textarea id="incident-description" rows="5" placeholder="Provide detailed information about what happened..." required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="components-affected">Components Affected</label>
+                  <select id="components-affected" multiple>
+                    <option value="motor">Motor</option>
+                    <option value="hydraulics">Hydraulic System</option>
+                    <option value="electrical">Electrical System</option>
+                    <option value="structural">Structural Components</option>
+                    <option value="cables">Cables/Wiring</option>
+                    <option value="controls">Control System</option>
+                    <option value="sensors">Sensors</option>
+                    <option value="software">Software</option>
+                  </select>
+                  <small>Hold Ctrl/Cmd to select multiple items</small>
+                </div>
+              </div>
+              
+              <div class="form-section">
+                <h3>Documentation</h3>
+                <div class="form-group">
+                  <label>Upload Photos or Videos</label>
+                  <div class="upload-container">
+                    <div class="upload-area" id="upload-area">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <p>Drag & drop files here or click to browse</p>
+                      <input type="file" id="file-upload" multiple accept="image/*,video/*" style="display: none;">
+                    </div>
+                    <div class="upload-preview" id="upload-preview">
+                      <!-- Files will be displayed here -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-section">
+                <h3>Additional Information</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="reported-by">Reported By*</label>
+                    <input type="text" id="reported-by" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-info">Contact Information</label>
+                    <input type="text" id="contact-info" placeholder="Phone or email for follow-up">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="witnesses">Witnesses (if any)</label>
+                  <input type="text" id="witnesses" placeholder="Names of any witnesses">
+                </div>
+                <div class="form-group">
+                  <label>Status Updates</label>
+                  <div class="checkbox-group">
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="notify-email">
+                      <span>Receive email notifications</span>
+                    </label>
+                    <label class="checkbox-item">
+                      <input type="checkbox" id="high-priority">
+                      <span>Flag as high priority</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" class="secondary-btn" id="reset-form-btn">Reset Form</button>
+              <button type="submit" class="primary-btn">Submit Incident Report</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Active Incidents Tab -->
+        <div class="tab-content" id="active-tab">
+          <div class="panel-header">
+            <h2>Active Incidents</h2>
+            <div class="panel-actions">
+              <button class="action-btn" id="refresh-incidents-btn">
+                <i class="fas fa-sync"></i> Refresh
+              </button>
+              <button class="action-btn" id="export-active-btn">
+                <i class="fas fa-file-export"></i> Export
+              </button>
+            </div>
+          </div>
+          
+          <div class="filter-section">
+            <div class="filter-group">
+              <label>Crane</label>
+              <select id="active-crane-filter">
+                <option value="all">All Cranes</option>
+                <option value="C-001">Crane #C-001</option>
+                <option value="C-002">Crane #C-002</option>
+                <option value="C-003">Crane #C-003</option>
+                <option value="C-004">Crane #C-004</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Status</label>
+              <select id="active-status-filter">
+                <option value="all">All Statuses</option>
+                <option value="reported">Reported</option>
+                <option value="in-progress">In Progress</option>
+                <option value="pending">Pending Parts</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Severity</label>
+              <select id="active-severity-filter">
+                <option value="all">All Severities</option>
+                <option value="critical">Critical</option>
+                <option value="moderate">Moderate</option>
+                <option value="minor">Minor</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Assigned To</label>
+              <select id="active-assigned-filter">
+                <option value="all">All Technicians</option>
+                <option value="unassigned">Unassigned</option>
+                <option value="team-a">Team A</option>
+                <option value="team-b">Team B</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="incidents-table-container">
+            <table class="incidents-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Crane</th>
+                  <th>Title</th>
+                  <th>Reported On</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-042</a></td>
+                  <td>Crane #C-004</td>
+                  <td>Hydraulic system pressure loss</td>
+                  <td>Jul 19, 2023</td>
+                  <td><span class="severity critical">Critical</span></td>
+                  <td><span class="status in-progress">In Progress</span></td>
+                  <td>Team A</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action edit-incident"><i class="fas fa-edit"></i></button>
+                    <button class="table-action assign-incident"><i class="fas fa-user-plus"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-041</a></td>
+                  <td>Crane #C-002</td>
+                  <td>Control panel unresponsive</td>
+                  <td>Jul 18, 2023</td>
+                  <td><span class="severity moderate">Moderate</span></td>
+                  <td><span class="status reported">Reported</span></td>
+                  <td>Unassigned</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action edit-incident"><i class="fas fa-edit"></i></button>
+                    <button class="table-action assign-incident"><i class="fas fa-user-plus"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-040</a></td>
+                  <td>Crane #C-003</td>
+                  <td>Unusual vibration in rotation mechanism</td>
+                  <td>Jul 17, 2023</td>
+                  <td><span class="severity minor">Minor</span></td>
+                  <td><span class="status pending">Pending Parts</span></td>
+                  <td>Team B</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action edit-incident"><i class="fas fa-edit"></i></button>
+                    <button class="table-action assign-incident"><i class="fas fa-user-plus"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Incident History Tab -->
+        <div class="tab-content" id="history-tab">
+          <div class="panel-header">
+            <h2>Incident History</h2>
+            <div class="panel-actions">
+              <button class="action-btn" id="export-history-btn">
+                <i class="fas fa-file-export"></i> Export
+              </button>
+            </div>
+          </div>
+          
+          <div class="filter-section">
+            <div class="filter-group">
+              <label>Crane</label>
+              <select id="history-crane-filter">
+                <option value="all">All Cranes</option>
+                <option value="C-001">Crane #C-001</option>
+                <option value="C-002">Crane #C-002</option>
+                <option value="C-003">Crane #C-003</option>
+                <option value="C-004">Crane #C-004</option>
+              </select>
+            </div>
+            <div class="filter-group date-range">
+              <label>Date Range</label>
+              <div class="date-inputs">
+                <input type="date" id="history-date-from">
+                <span>to</span>
+                <input type="date" id="history-date-to">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label>Type</label>
+              <select id="history-type-filter">
+                <option value="all">All Types</option>
+                <option value="mechanical">Mechanical</option>
+                <option value="electrical">Electrical</option>
+                <option value="hydraulic">Hydraulic</option>
+                <option value="structural">Structural</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="incidents-table-container">
+            <table class="incidents-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Crane</th>
+                  <th>Title</th>
+                  <th>Reported On</th>
+                  <th>Resolved On</th>
+                  <th>Severity</th>
+                  <th>Downtime</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-039</a></td>
+                  <td>Crane #C-001</td>
+                  <td>Motor overheating during extended operation</td>
+                  <td>Jul 10, 2023</td>
+                  <td>Jul 12, 2023</td>
+                  <td><span class="severity moderate">Moderate</span></td>
+                  <td>8 hours</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action download-report"><i class="fas fa-file-pdf"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-038</a></td>
+                  <td>Crane #C-004</td>
+                  <td>Load sensor calibration error</td>
+                  <td>Jul 5, 2023</td>
+                  <td>Jul 6, 2023</td>
+                  <td><span class="severity minor">Minor</span></td>
+                  <td>4 hours</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action download-report"><i class="fas fa-file-pdf"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><a href="#" class="incident-link">INC-2023-035</a></td>
+                  <td>Crane #C-002</td>
+                  <td>Complete electrical failure</td>
+                  <td>Jun 28, 2023</td>
+                  <td>Jun 30, 2023</td>
+                  <td><span class="severity critical">Critical</span></td>
+                  <td>36 hours</td>
+                  <td>
+                    <button class="table-action view-incident"><i class="fas fa-eye"></i></button>
+                    <button class="table-action download-report"><i class="fas fa-file-pdf"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Analytics & Trends Tab -->
+        <div class="tab-content" id="trends-tab">
+          <div class="panel-header">
+            <h2>Incident Analytics & Trends</h2>
+            <div class="panel-actions">
+              <select id="trends-timeframe">
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+              <button class="action-btn" id="export-trends-btn">
+                <i class="fas fa-file-export"></i> Export
+              </button>
+            </div>
+          </div>
+          
+          <div class="analytics-overview">
+            <div class="analytics-card">
+              <div class="analytics-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="analytics-info">
+                <h3>Total Incidents</h3>
+                <p class="analytics-number">42</p>
+                <span class="analytics-trend negative"><i class="fas fa-arrow-up"></i> 15% vs. last period</span>
+              </div>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="analytics-info">
+                <h3>Avg. Resolution Time</h3>
+                <p class="analytics-number">12.5 hrs</p>
+                <span class="analytics-trend positive"><i class="fas fa-arrow-down"></i> 8% vs. last period</span>
+              </div>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-icon">
+                <i class="fas fa-tools"></i>
+              </div>
+              <div class="analytics-info">
+                <h3>Top Issue Type</h3>
+                <p class="analytics-text">Hydraulic</p>
+                <span class="analytics-subtext">32% of all incidents</span>
+              </div>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-icon">
+                <i class="fas fa-truck-monster"></i>
+              </div>
+              <div class="analytics-info">
+                <h3>Most Affected Crane</h3>
+                <p class="analytics-text">Crane #C-004</p>
+                <span class="analytics-subtext">14 incidents reported</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analytics-charts">
+            <div class="chart-container">
+              <h3>Incidents by Type</h3>
+              <canvas id="incidentsByTypeChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Incidents by Severity</h3>
+              <canvas id="incidentsBySeverityChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Resolution Time Trends</h3>
+              <canvas id="resolutionTimeChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3>Incidents by Crane</h3>
+              <canvas id="incidentsByCraneChart"></canvas>
+            </div>
+          </div>
+          
+          <div class="predictive-analysis">
+            <h3>AI-Based Failure Predictions</h3>
+            <p class="prediction-intro">Based on historical data and current conditions, the following cranes have an elevated risk of issues:</p>
+            
+            <div class="prediction-list">
+              <div class="prediction-item high-risk">
+                <div class="prediction-icon">
+                  <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="prediction-crane">
+                  <h4>Crane #C-003</h4>
+                  <p>Manufacturing Plant C</p>
+                </div>
+                <div class="prediction-details">
+                  <div class="prediction-risk">
+                    <span class="risk-label">Risk Level:</span>
+                    <span class="risk-value high">High (78%)</span>
+                  </div>
+                  <div class="prediction-component">
+                    <span class="component-label">Component:</span>
+                    <span class="component-value">Hydraulic System</span>
+                  </div>
+                </div>
+                <div class="prediction-timeframe">
+                  <p>Predicted failure window: <strong>3-5 days</strong></p>
+                </div>
+                <div class="prediction-action">
+                  <button class="action-btn">Schedule Inspection</button>
+                </div>
+              </div>
+              
+              <div class="prediction-item medium-risk">
+                <div class="prediction-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="prediction-crane">
+                  <h4>Crane #C-001</h4>
+                  <p>Construction Site A</p>
+                </div>
+                <div class="prediction-details">
+                  <div class="prediction-risk">
+                    <span class="risk-label">Risk Level:</span>
+                    <span class="risk-value medium">Medium (45%)</span>
+                  </div>
+                  <div class="prediction-component">
+                    <span class="component-label">Component:</span>
+                    <span class="component-value">Motor Bearings</span>
+                  </div>
+                </div>
+                <div class="prediction-timeframe">
+                  <p>Predicted failure window: <strong>2-3 weeks</strong></p>
+                </div>
+                <div class="prediction-action">
+                  <button class="action-btn">Schedule Inspection</button>
+                </div>
+              </div>
+              
+              <div class="prediction-item low-risk">
+                <div class="prediction-icon">
+                  <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="prediction-crane">
+                  <h4>Crane #C-002</h4>
+                  <p>Port Facility B</p>
+                </div>
+                <div class="prediction-details">
+                  <div class="prediction-risk">
+                    <span class="risk-label">Risk Level:</span>
+                    <span class="risk-value low">Low (22%)</span>
+                  </div>
+                  <div class="prediction-component">
+                    <span class="component-label">Component:</span>
+                    <span class="component-value">Electrical System</span>
+                  </div>
+                </div>
+                <div class="prediction-timeframe">
+                  <p>Predicted failure window: <strong>1-2 months</strong></p>
+                </div>
+                <div class="prediction-action">
+                  <button class="action-btn">Schedule Inspection</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Incident Modal -->
+  <div id="view-incident-modal" class="modal">
+    <div class="modal-content wide-modal">
+      <div class="modal-header">
+        <h2>Incident Details - INC-2023-042</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="incident-details">
+          <div class="incident-status-bar">
+            <div class="status-label">Status:</div>
+            <div class="status-progress">
+              <div class="status-step completed">
+                <div class="step-indicator"><i class="fas fa-check"></i></div>
+                <div class="step-label">Reported</div>
+                <div class="step-time">Jul 19, 10:30 AM</div>
+              </div>
+              <div class="status-connector completed"></div>
+              <div class="status-step active">
+                <div class="step-indicator"><i class="fas fa-cog"></i></div>
+                <div class="step-label">In Progress</div>
+                <div class="step-time">Jul 20, 8:15 AM</div>
+              </div>
+              <div class="status-connector"></div>
+              <div class="status-step">
+                <div class="step-indicator"><i class="fas fa-check-circle"></i></div>
+                <div class="step-label">Resolved</div>
+                <div class="step-time">Pending</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="incident-info-grid">
+            <div class="info-section">
+              <h3>Basic Information</h3>
+              <div class="info-item">
+                <div class="info-label">Incident ID:</div>
+                <div class="info-value">INC-2023-042</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Crane:</div>
+                <div class="info-value">Crane #C-004 (Shipping Yard D)</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Reported By:</div>
+                <div class="info-value">John Smith (Operator)</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Reported Date:</div>
+                <div class="info-value">July 19, 2023 - 10:30 AM</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Incident Type:</div>
+                <div class="info-value">Hydraulic System</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Severity:</div>
+                <div class="info-value"><span class="severity critical">Critical</span></div>
+              </div>
+            </div>
+            
+            <div class="info-section">
+              <h3>Assignment & Resolution</h3>
+              <div class="info-item">
+                <div class="info-label">Assigned To:</div>
+                <div class="info-value">Team A (Mark Johnson, Lead)</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Assigned Date:</div>
+                <div class="info-value">July 19, 2023 - 11:15 AM</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Estimated Completion:</div>
+                <div class="info-value">July 22, 2023</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Components Affected:</div>
+                <div class="info-value">Hydraulic Pump, Pressure Valve, Fluid Lines</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Parts Required:</div>
+                <div class="info-value">Hydraulic Pump Assembly (#HP-204), Pressure Seals</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Estimated Downtime:</div>
+                <div class="info-value">24-48 hours</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="incident-description">
+            <h3>Incident Description</h3>
+            <p>During routine lifting operations, operator noticed a sudden pressure drop in the hydraulic system. The crane was unable to maintain lifting pressure and had to be immediately shut down. Visual inspection revealed hydraulic fluid leaking from the main pump assembly. The pressure gauge was fluctuating between 1500-2000 PSI (normal operating pressure should be stable at 3200 PSI). No unusual sounds or vibrations were reported prior to the failure.</p>
+          </div>
+          
+          <div class="incident-media">
+            <h3>Photos & Documentation</h3>
+            <div class="media-preview">
+              <div class="media-item">
+                <img src="https://via.placeholder.com/150?text=Hydraulic+Leak" alt="Hydraulic Leak">
+                <p>Hydraulic fluid leak at pump connection</p>
+              </div>
+              <div class="media-item">
+                <img src="https://via.placeholder.com/150?text=Pressure+Gauge" alt="Pressure Gauge">
+                <p>Pressure gauge showing low reading</p>
+              </div>
+              <div class="media-item">
+                <img src="https://via.placeholder.com/150?text=Damaged+Pump" alt="Damaged Pump">
+                <p>Close-up of damaged pump assembly</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="comments-section">
+            <h3>Comments & Updates</h3>
+            <div class="comment-list">
+              <div class="comment">
+                <div class="comment-header">
+                  <div class="comment-author">Mark Johnson (Maintenance)</div>
+                  <div class="comment-time">July 20, 2023 - 8:30 AM</div>
+                </div>
+                <div class="comment-body">
+                  <p>Initial inspection confirms hydraulic pump failure. The pump bearings appear to have failed, causing internal damage. We've ordered the replacement pump assembly (HP-204) which should arrive tomorrow. In the meantime, we're draining the hydraulic system to prepare for the replacement.</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-header">
+                  <div class="comment-author">Susan Chen (Supervisor)</div>
+                  <div class="comment-time">July 20, 2023 - 10:15 AM</div>
+                </div>
+                <div class="comment-body">
+                  <p>Has the cause of the bearing failure been determined? We need to check if this is a maintenance issue or a manufacturing defect.</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-header">
+                  <div class="comment-author">Mark Johnson (Maintenance)</div>
+                  <div class="comment-time">July 20, 2023 - 1:45 PM</div>
+                </div>
+                <div class="comment-body">
+                  <p>Initial assessment suggests contamination in the hydraulic fluid may have accelerated bearing wear. Taking fluid samples for analysis. Will update once we have more information.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="add-comment">
+              <h4>Add Comment</h4>
+              <textarea id="new-comment" rows="3" placeholder="Type your comment here..."></textarea>
+              <div class="comment-actions">
+                <button class="secondary-btn">Upload Photo</button>
+                <button class="primary-btn">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign Incident Modal -->
+  <div id="assign-incident-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Assign Incident - INC-2023-041</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="assign-form">
+          <div class="form-group">
+            <label for="assign-team">Assign To Team</label>
+            <select id="assign-team">
+              <option value="">Select a team</option>
+              <option value="team-a">Team A</option>
+              <option value="team-b">Team B</option>
+              <option value="team-c">Team C</option>
+              <option value="emergency">Emergency Response Team</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="assign-technician">Primary Technician</label>
+            <select id="assign-technician">
+              <option value="">Select a technician</option>
+              <option value="tech-1">Mark Johnson</option>
+              <option value="tech-2">Sarah Williams</option>
+              <option value="tech-3">David Chen</option>
+              <option value="tech-4">Lisa Rodriguez</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="priority-level">Priority Level</label>
+            <select id="priority-level">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high" selected>High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estimated-time">Estimated Resolution Time (hours)</label>
+            <input type="number" id="estimated-time" min="1" value="24">
+          </div>
+          <div class="form-group">
+            <label for="assignment-notes">Notes for Technician</label>
+            <textarea id="assignment-notes" rows="3" placeholder="Add any specific instructions or information..."></textarea>
+          </div>
+          <div class="form-group checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" id="notify-team" checked>
+              <span>Send notification to assigned team</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" id="notify-reporter" checked>
+              <span>Notify incident reporter about assignment</span>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn cancel-modal">Cancel</button>
+            <button type="submit" class="primary-btn">Assign Incident</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="incidents.js"></script>
+</body>
+</html>

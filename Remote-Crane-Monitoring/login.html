@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CraneMonitor - Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="login.css" rel="stylesheet" type="text/css" />
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+
+<body class="login-page">
+  <div class="login-container">
+    <div class="login-header">
+      <h2>CraneMonitor</h2>
+      <p>Remote Crane Monitoring & Predictive Maintenance</p>
+    </div>
+
+    <div class="login-form-container">
+      <div class="form-switcher">
+        <button class="active" id="login-tab">Login</button>
+        <button id="forgot-tab">Forgot Password</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="login-form">
+        <div class="input-group">
+          <label for="username">Username or Email</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" required>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" required>
+            <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        
+        <div class="input-group" id="mfa-section" style="display: none;">
+          <label for="otp">One-Time Password (OTP)</label>
+          <div class="input-with-icon">
+            <i class="fas fa-key"></i>
+            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code">
+          </div>
+        </div>
+
+        <div class="remember-me">
+          <input type="checkbox" id="remember" name="remember">
+          <label for="remember">Remember me</label>
+        </div>
+        
+        <div class="g-recaptcha" data-sitekey="your-recaptcha-site-key"></div>
+        
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form id="forgot-form" class="login-form" style="display: none;">
+        <div class="input-group">
+          <label for="reset-email">Email Address</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="reset-email" name="reset-email" required>
+          </div>
+        </div>
+        
+        <div class="g-recaptcha" data-sitekey="your-recaptcha-site-key"></div>
+        
+        <button type="submit" class="login-btn">Reset Password</button>
+      </form>
+    </div>
+
+    <div class="social-login">
+      <p>Or login with</p>
+      <div class="social-buttons">
+        <button class="google-btn"><i class="fab fa-google"></i> Google</button>
+        <button class="microsoft-btn"><i class="fab fa-microsoft"></i> Microsoft</button>
+        <button class="sso-btn"><i class="fas fa-building"></i> Enterprise SSO</button>
+      </div>
+    </div>
+
+    <div class="theme-toggle">
+      <span>Dark Mode</span>
+      <label class="switch">
+        <input type="checkbox" id="theme-switch">
+        <span class="slider round"></span>
+      </label>
+    </div>
+
+    <div class="login-footer">
+      <p>© 2023 CraneMonitor. All rights reserved.</p>
+      <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>
